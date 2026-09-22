@@ -100,6 +100,61 @@ A: Karena vendor/ di-commit, setelah composer require <package> di komputer kamu
     php artisan cache:clear
     php artisan view:clear
 
+## Recovery MySQL (kalau XAMPP "shutdown unexpectedly")
+
+Kalau XAMPP Control Panel menampilkan error **"MySQL shutdown unexpectedly"** dengan pesan log InnoDB seperti:
+
+    [ERROR] InnoDB: Page [page id: space=0, page number=X] log sequence number YYY is in the future!
+    [ERROR] InnoDB: Your database may be corrupt or you may have copied the InnoDB tablespace but not the InnoDB log files.
+
+Maka InnoDB tablespace (`ibdata1`) tidak sinkron dengan redo logs (`ib_logfile0/1`). Penyebab umum: MySQL di-shutdown paksa (kill dari Task Manager / mati listrik), atau `ibdata1` di-restore dari backup tanpa redo logs.
+
+Jalankan tool recovery yang sudah tersedia:
+
+    fix-mysql.bat
+
+Script akan otomatis (8 langkah):
+1. Kill mysqld.exe (kalau masih jalan)
+2. Backup `ibdata1` + `ib_logfile*` ke `*.bak.YYYYMMDD_HHMMSS`
+3. Bersihkan `innodb_force_recovery` lama dari `my.ini` (jika ada)
+4. Coba start MySQL normal — InnoDB auto-rebuild redo logs
+5. Kalau masih gagal, start dengan `innodb_force_recovery=6 + --skip-grant-tables` lalu dump semua database
+6. Stop MySQL, hapus folder database + InnoDB files + folder `mysql/` + `performance_schema/`
+7. Run `mysql_install_db.exe` untuk re-init system tables
+8. Start MySQL fresh + restore dump dari langkah 5
+
+Dump otomatis disimpan ke `storage\app\mysql-dump\all_databases.sql` (53 MB untuk project ini).
+
+**Setelah recovery sukses**, jalankan langkah tambahan:
+
+    REM Kalau error "Table 'oauth_auth_codes' already exists" saat migrate:
+    REM Insert manual 5 record ke tabel migrations, baru migrate ulang:
+    mysql -u root smartlibraryv2 -e "INSERT IGNORE INTO migrations (migration, batch) VALUES \
+      ('2016_06_01_000001_create_oauth_auth_codes_table', 1), \
+      ('2016_06_01_000002_create_oauth_access_tokens_table', 1), \
+      ('2016_06_01_000003_create_oauth_refresh_tokens_table', 1), \
+      ('2016_06_01_000004_create_oauth_clients_table', 1), \
+      ('2016_06_01_000005_create_oauth_personal_access_clients_table', 1);"
+
+    php artisan migrate --force
+
+**Backup files di `D:\xampp\mysql\data\*.bak.YYYYMMDD_HHMMSS`** aman dihapus setelah yakin data application restore dengan benar. Keep minimal sampai 1 minggu untuk jaga-jaga.
+
+### Verifikasi koneksi DB setelah recovery
+
+    REM Cek mysqld jalan
+    tasklist /FI "IMAGENAME eq mysqld.exe"
+
+    REM Cek port 3306 listening
+    netstat -an | findstr :3306
+
+    REM Test query
+    d:\xampp\mysql\bin\mysql.exe -u root -e "SELECT VERSION(); SHOW DATABASES;"
+
+Kalau `SHOW DATABASES` tidak menampilkan `smartlibraryv2` (atau database project), cek file `storage\app\mysql-dump\restore_errors.log` — kemungkinan dump terpotong karena tablespace conflict atau stderr mysqldump ikut tercampur. Solusi: hapus folder database di `D:\xampp\mysql\data\<nama_db>\` lalu re-restore dump:
+
+    Get-Content storage\app\mysql-dump\all_databases.sql | d:\xampp\mysql\bin\mysql.exe -u root
+
 # Setup Clone & Jalankan 1 klik
 
 Project ini adalah aplikasi Laravel. Setelah git clone, jalankan satu perintah untuk setup otomatis:

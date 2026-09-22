@@ -52,6 +52,13 @@
 							<li class="{{Request::path()=='op/peminjaman/terlambat' ? 'pc-item active' : 'pc-item'}}"><a class="pc-link" href="{{route('op.peminjaman.terlambat')}}">Daftar Terlambat</a></li>
 						</ul>
 					</li>
+				<li class="pc-item pc-hasmenu {{Request::is('op/video*') ? 'pc-trigger active' : ''}}">
+					<a href="#!" class="pc-link"><span class="pc-micon"><i data-feather="play-circle"></i></span><span class="pc-mtext">Video Tutorial</span><span class="pc-arrow"><i data-feather="chevron-right"></i></span></a>
+					<ul class="pc-submenu">
+						<li class="{{Request::path()=='op/video' ? 'pc-item active' : 'pc-item'}}"><a class="pc-link" href="{{route('op.video')}}">Daftar Video</a></li>
+						<li class="{{Request::path()=='op/video/create' ? 'pc-item active' : 'pc-item'}}"><a class="pc-link" href="{{route('op.video.insert')}}">Tambah Video</a></li>
+					</ul>
+				</li>
 					@endif
 
 					<li class="pc-item pc-caption">

@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.7
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Oct 13, 2022 at 04:22 AM
--- Server version: 10.5.17-MariaDB-cll-lve
--- PHP Version: 7.4.30
+-- Host: 127.0.0.1
+-- Generation Time: Sep 22, 2026 at 11:24 AM
+-- Server version: 10.4.13-MariaDB
+-- PHP Version: 7.3.20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -19,8 +18,39 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `u1681097_smartlibrary`
+-- Database: `app`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `buku_fisik`
+--
+
+CREATE TABLE `buku_fisik` (
+  `id_buku_fisik` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_sekolah` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id_kategori` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `judul` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `penulis` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `penerbit` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tahun` int(11) DEFAULT NULL,
+  `isbn` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `rak` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `stok` int(11) NOT NULL DEFAULT 0,
+  `tersedia` int(11) NOT NULL DEFAULT 0,
+  `deskripsi` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `buku_fisik`
+--
+
+INSERT INTO `buku_fisik` (`id_buku_fisik`, `id_sekolah`, `id_kategori`, `judul`, `penulis`, `penerbit`, `tahun`, `isbn`, `rak`, `stok`, `tersedia`, `deskripsi`, `created_at`, `updated_at`) VALUES
+('8806a65e-73fc-4fd7-b562-31eb2ceb3a12', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', 'f2b17b59-b9b1-42cc-a746-bc6743a8572c', 'Psychology of Money', NULL, NULL, NULL, NULL, NULL, 4, 4, NULL, '2026-09-21 02:09:00', '2026-09-21 09:18:23'),
+('be9b59f6-2623-452a-ad13-06dc7c76e819', '076904eb-4e9d-4f0f-8b86-89fcb480b167', 'f2b17b59-b9b1-42cc-a746-bc6743a8572c', 'Psychology of Money', NULL, NULL, NULL, NULL, NULL, 10, 10, NULL, '2026-09-21 02:58:05', '2026-09-21 17:57:43');
 
 -- --------------------------------------------------------
 
@@ -7254,6 +7284,13 @@ CREATE TABLE `migrations` (
   `batch` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `migrations`
+--
+
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
+(1, '2026_09_22_120000_create_videos_table', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -7498,6 +7535,64 @@ CREATE TABLE `oauth_refresh_tokens` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `peminjaman`
+--
+
+CREATE TABLE `peminjaman` (
+  `id_peminjaman` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_buku_fisik` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_user_peminjam` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id_operator` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_peminjam` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kontak_peminjam` varchar(35) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tanggal_pinjam` date NOT NULL,
+  `tanggal_rencana_kembali` date NOT NULL,
+  `status` enum('DIPINJAM','DIKEMBALIKAN','TERLAMBAT') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'DIPINJAM',
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `peminjaman`
+--
+
+INSERT INTO `peminjaman` (`id_peminjaman`, `id_buku_fisik`, `id_user_peminjam`, `id_operator`, `nama_peminjam`, `kontak_peminjam`, `tanggal_pinjam`, `tanggal_rencana_kembali`, `status`, `created_at`, `updated_at`) VALUES
+('003b361a-ed1d-47e7-90d5-2e58dcb35d96', 'be9b59f6-2623-452a-ad13-06dc7c76e819', NULL, 'f37157c3-8185-4508-9f8e-325feeb40652', 'ree', '45', '2026-09-21', '2026-09-21', 'DIKEMBALIKAN', '2026-09-21 17:55:28', '2026-09-21 17:56:25'),
+('0e43a243-bf34-439c-9b1c-12152fd44982', 'be9b59f6-2623-452a-ad13-06dc7c76e819', NULL, 'f37157c3-8185-4508-9f8e-325feeb40652', 'Testing', '65', '2026-09-22', '2026-09-29', 'DIKEMBALIKAN', '2026-09-21 17:54:46', '2026-09-21 17:56:01'),
+('20033286-2e7c-4be4-910c-b491008d7a60', 'be9b59f6-2623-452a-ad13-06dc7c76e819', NULL, 'f37157c3-8185-4508-9f8e-325feeb40652', 'vdd', '43', '2026-09-20', '2026-09-20', 'DIKEMBALIKAN', '2026-09-21 17:57:22', '2026-09-21 17:57:43'),
+('d8aa8cf5-70d3-4ab0-b8c3-952874ce83a6', 'be9b59f6-2623-452a-ad13-06dc7c76e819', NULL, 'f37157c3-8185-4508-9f8e-325feeb40652', 'Testing', NULL, '2026-09-21', '2026-09-28', 'DIKEMBALIKAN', '2026-09-21 02:59:26', '2026-09-21 04:00:06');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pengembalian`
+--
+
+CREATE TABLE `pengembalian` (
+  `id_pengembalian` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_peminjaman` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_operator` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tanggal_kembali` date NOT NULL,
+  `hari_terlambat` int(11) NOT NULL DEFAULT 0,
+  `denda` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `catatan` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `pengembalian`
+--
+
+INSERT INTO `pengembalian` (`id_pengembalian`, `id_peminjaman`, `id_operator`, `tanggal_kembali`, `hari_terlambat`, `denda`, `catatan`, `created_at`, `updated_at`) VALUES
+('2bb7fcc7-7a2c-41bd-9bbf-e32691c1b590', 'd8aa8cf5-70d3-4ab0-b8c3-952874ce83a6', 'f37157c3-8185-4508-9f8e-325feeb40652', '2026-09-21', 0, '0.00', NULL, '2026-09-21 04:00:06', '2026-09-21 04:00:06'),
+('4f9b594c-3dd2-409c-998a-55ef2a85071a', '0e43a243-bf34-439c-9b1c-12152fd44982', 'f37157c3-8185-4508-9f8e-325feeb40652', '2026-09-22', 0, '0.00', NULL, '2026-09-21 17:56:01', '2026-09-21 17:56:01'),
+('65990fd1-c605-447e-a87e-692aae2df73d', '003b361a-ed1d-47e7-90d5-2e58dcb35d96', 'f37157c3-8185-4508-9f8e-325feeb40652', '2026-09-22', 1, '1000.00', NULL, '2026-09-21 17:56:25', '2026-09-21 17:56:25'),
+('ab759e3e-0ee2-4335-ba46-59b49a71a362', '20033286-2e7c-4be4-910c-b491008d7a60', 'f37157c3-8185-4508-9f8e-325feeb40652', '2026-09-22', 2, '2000.00', NULL, '2026-09-21 17:57:43', '2026-09-21 17:57:43');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `sekolah`
 --
 
@@ -7597,14 +7692,14 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `level`, `aktif`, `kontak`, `id_sekolah`, `remember_token`, `created_at`, `updated_at`) VALUES
 ('00245a86-cf3c-4d58-854a-e066115bc878', 'Multaqlhusna', 'multaqalhusna2007@gmail.com', NULL, '$2y$10$W/LYeelCVkBzb1axCZRD9.HrtjEVuoGVu5CcAnN8Mfst6mLC3ltc.', 'MEMBER', 'N', '081210338963', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-18 18:25:33', '2021-07-18 18:25:33'),
-('0068d0c2-c54b-4233-ab59-c7bc884bc226', 'mediela agatha', 'agathamediela@gmail.com', NULL, '$2y$10$vUNSZLOzwgczqOyPlRzUkuZoJgEg/QQXy1HBB1M2XA4aQUTCeE2hq', 'MEMBER', 'N', '085939672070', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-07-26 01:48:49', '2021-07-26 01:48:49'),
+('0068d0c2-c54b-4233-ab59-c7bc884bc226', 'mediela agatha', 'agathamediela@gmail.com', NULL, '$2y$10$vUNSZLOzwgczqOyPlRzUkuZoJgEg/QQXy1HBB1M2XA4aQUTCeE2hq', 'MEMBER', 'N', '085939672070', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-07-26 01:48:49', '2026-09-21 20:05:54'),
 ('007bc308-ac91-45f6-b40f-376190c5348a', 'Aghnani Nurazizah', 'aghnani.nurazizah523@nurulfikri.sch.id', NULL, '$2y$10$SdRrxKwpooqXGPw3Rdc1n.HypKblXAODq0lHpVjA7fdl9mFyuwcEO', 'MEMBER', 'N', '08998808888', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-02 06:44:53', '2021-08-02 06:44:53'),
 ('00875521-c104-46f7-9ca0-ea899e151ad2', 'Fhizu Vianca', 'fhizudd@gmail.com', NULL, '$2y$10$EjWgGt7nrwplxJIhfIJVXuqlIMqDYzkJMNImoC6xRmmmEaodSd5F.', 'MEMBER', 'Y', '0898938938938', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-14 00:24:40', '2021-03-21 20:28:55'),
 ('00952168-8887-4ea9-9638-b5cb88e3b7c5', 'kasabian  pramudya pratama', '0134210583@yppsb.id', NULL, '$2y$10$/UMLvCPfz81QmrxHCjdHpeovUMB4JyHagDfxSinmZHzh7me3M37Sm', 'MEMBER', 'N', '081280673984', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-19 18:45:24', '2021-07-19 18:45:24'),
 ('00d29c8e-372a-43ae-a0e8-720144fa4268', 'Vania Angelina Zheng', 'vania.angelina@kalamkudussolo.sch.id', NULL, '$2y$10$z0.yA6Eeg/fGISliDnAaA.L76sWxRTFgMND0n/r59/GBfRmX.HaeS', 'MEMBER', 'N', '082138212668', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-22 18:03:03', '2021-07-22 18:03:03'),
 ('00f69404-467d-435c-aaba-0f4afceb346c', 'Misbahuddin Dakris', 'dakrismisbahuddin@gmail.com', NULL, '$2y$10$ZSQZ/C0gq2UIlVFGE.JbPe.NjJqipPSlp3dsdr2u1ESPmAV0pOBqa', 'MEMBER', 'Y', '085242883798', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-15 22:36:19', '2020-12-15 22:36:19'),
 ('00fb862c-6059-4d77-9d70-051d47815918', 'Katharine Sih Kinanti', 'Katharinesih.Kinanti@gmail.com', NULL, '$2y$10$VzAjszdzO4XhmwydCqLAouy.LzcMctc8o7vIwXY/iAmI.LBa0bKr.', 'MEMBER', 'Y', '082122200312', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-02-07 19:28:40', '2021-02-07 19:28:40'),
-('018a7833-8e20-4715-ae6f-fc1c3048cc09', 'tes', 'tes@gmail.com', NULL, '$2y$10$hav7WTBucxatVTxvHBSvTeAIEDdljC7nBPl9SYxdkNHSLae2RigyK', 'MEMBER', 'Y', '08292910820', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-15 22:30:20', '2022-10-09 06:01:08'),
+('018a7833-8e20-4715-ae6f-fc1c3048cc09', 'tes', 'tes@gmail.com', NULL, '$2y$10$hav7WTBucxatVTxvHBSvTeAIEDdljC7nBPl9SYxdkNHSLae2RigyK', 'OPERATOR', 'Y', '08292910820', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-15 22:30:20', '2022-10-09 06:01:08'),
 ('01abfe47-790d-4c2c-8d0c-422262e9e1be', 'viraz syahlan', 'viraz2k20@gmail.com', NULL, '$2y$10$WIJ3gERebNxtoYvnYWEE7Oj1Vd5hMToQVSgMOSYO1p53qG6VncWQS', 'MEMBER', 'N', '085893526805', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-12 19:30:57', '2021-07-12 19:30:57'),
 ('01d1bb81-8c15-4c8a-99f6-b5eb1bb03ca4', 'kim', 'p2020_8142@sttheresia-jkt.sch.id', NULL, '$2y$10$J5t2rSGitBsarWtDlVg4B.JSVWiHGkoxY4Yad1nnyTWKbZHRrps1y', 'MEMBER', 'N', '087885251797', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-07-20 19:39:54', '2021-07-20 19:39:54'),
 ('01e0ff10-56b5-4657-979a-ae762aa90943', 'AlenoZidan', 'aleno.zidan29@nurulfikri.sch.id', NULL, '$2y$10$HiaDHIjHSvajcuft2av5AeAy0Dzya1h7ZPrPuxWsOR1YPOJhBVxzG', 'MEMBER', 'N', '+62 812-8107', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-02 17:18:21', '2021-08-02 17:18:21'),
@@ -7617,7 +7712,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `le
 ('0271b85f-f28f-4d29-ae62-8c812c538f1e', 'Himmatul Ulya', 'huyaulya@gmail.com', NULL, '$2y$10$6tFUIZvKSBe2.0IvIW9hgubqtX4G0aNXP8ks1MA/dvuM7E3tg1uam', 'MEMBER', 'Y', '082137215781', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-02-15 16:23:35', '2021-02-15 16:23:35'),
 ('029d7db0-d94c-4901-8245-aeb2384bfeaa', 'Bayu Iskandar', 'melatiintan888@gmail.com', NULL, '$2y$10$T5/KHqoB.6WpjtFSlu9ADu/3tFX4wE2R7eIHPpeo1DazKEUOOraqK', 'MEMBER', 'N', '089656121189', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-06-25 00:55:44', '2021-06-25 00:55:44'),
 ('02aba165-9bbf-4b73-a8b8-c5f565da55cd', 'ridwan', 'ridwan@gmail.com', NULL, '$2y$10$c87gJD9/GzeXmSvETYPRkertRQqk96X9oiY7CCRsIhlBxB8nkaDvu', 'MEMBER', 'Y', NULL, NULL, NULL, '2022-09-30 19:11:38', '2022-09-30 19:11:38'),
-('02c4086b-aaef-4306-87f5-de024ce913e7', 'Muhardi', 'muhardi@gmail.com', NULL, '$2y$10$KgdCMvOJyR7lcuCb9tdaFupC8N7woqSlFINER0/ep9uECf6bT0sVq', 'MEMBER', 'Y', '0895332020969', '076904eb-4e9d-4f0f-8b86-89fcb480b167', NULL, '2021-06-06 02:38:58', '2021-06-06 03:25:23'),
+('02c4086b-aaef-4306-87f5-de024ce913e7', 'Muhardi', 'muhardi@gmail.com', NULL, '$2y$10$KgdCMvOJyR7lcuCb9tdaFupC8N7woqSlFINER0/ep9uECf6bT0sVq', 'MEMBER', 'Y', '0895332020969', '076904eb-4e9d-4f0f-8b86-89fcb480b167', NULL, '2021-06-06 02:38:58', '2026-09-21 20:05:54'),
 ('030f23cf-dbeb-47cf-b404-785ed36f8601', 'Ururu', 'yamigaminami@gmail.com', NULL, '$2y$10$qbQCM6CYEEV.PSJn6xBRW.gA3ldgqGhiNhOzcu124n4y1NxXscNeK', 'MEMBER', 'N', '083843207492', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-01 07:20:33', '2021-07-01 07:20:33'),
 ('031aadf3-8815-4844-b8db-455f1bdefb5d', 'Lina', 'erlyna15@gmail.com', NULL, '$2y$10$uoQ4UubSmb5BS8wIvbk0vefj.eWl3CsYBFxJtRx26SbVp1f./k/Y.', 'MEMBER', 'N', '081332722822', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-09 10:49:04', '2021-08-09 10:49:04'),
 ('03266ff5-8916-4920-9660-5237dca534be', 'Figur Sahmura', 'figursahmura@gmail.com', NULL, '$2y$10$XlRu.eiU9jC7gevjPKZ7nOKsgd3VPtQw06NGZ/WzG1h3XTyMh1Sji', 'ADMIN', 'Y', '-', NULL, NULL, '2021-06-18 23:25:20', '2021-06-23 19:26:53'),
@@ -7746,6 +7841,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `le
 ('1506e1ca-1e76-4e99-8614-15a0dd096605', 'Sania Ummi Fadhilah', 'saniaummifa38@gmail.com', NULL, '$2y$10$7ZbSUlqtvuRLComSenGd3eEJIRG6SdWgJTm.uUmNVv39nx9suy2gu', 'MEMBER', 'Y', '083844133882', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-05-19 04:41:15', '2021-05-19 04:41:15'),
 ('15247630-5163-4042-8611-b95fffcae8e0', 'gabie', 'gabie.prajna@gmail.com', NULL, '$2y$10$S2W9v6XQTQqQ5LcZnFhYZe4HgUmQGYSl6zHuO1QEsIRjaV5HTu0j2', 'MEMBER', 'N', '08988747378', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-13 19:15:56', '2021-07-13 19:15:56'),
 ('1534b5ba-5737-4d49-881e-4cd552db18ce', 'Ayesha Eka Putri', 'ayeshaep1006@gmail.com', NULL, '$2y$10$ohea0oHbPONFPvf5/6knfuzsSAME5jY0vO5RMMb9uzPcO/UccLNDO', 'MEMBER', 'Y', '087760383983', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-24 21:56:04', '2021-03-24 21:56:04'),
+('154aa7e8-010d-4f6a-aba3-9b087675cba6', 'Unit Test 3', 'unitest3@sekolah.sch.id', NULL, '$2y$10$6datzQVgDui3bEbD6N/Qau6xvk5AcD3VQqUKPL0GiaKEKOedorZNO', 'MEMBER', 'Y', '081234567892', '076904eb-4e9d-4f0f-8b86-89fcb480b167', NULL, '2026-09-21 19:44:01', '2026-09-21 19:44:01'),
 ('156f3fe2-6ec8-47c7-917a-fc67679e68b3', 'Nur aini', 'marhaiynimilsand@gmail.com', NULL, '$2y$10$aX8gVVXVa38ZRKjAClhY0uGLEk5HV51.yKUyvc4Im7N9RZ/EL81XW', 'MEMBER', 'Y', '082251971463', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-16 19:22:23', '2020-12-16 19:22:23'),
 ('157669e8-4c87-49b3-b1db-33c06fea7dd1', 'Kavin', 'kavin_adriel@smpmydepok.sch.id', NULL, '$2y$10$9XtzhD8YF1yZ6/vlSgILNucABvNFao1F80NQl4ZlDoEp7SBVMRPqa', 'MEMBER', 'Y', '085946324263', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-01-13 06:27:22', '2021-01-13 06:27:22'),
 ('158e2e63-c1b8-4d77-be42-a4a61f1ea0f4', 'nadira inaya putri', 'nadirainaya17@gmail.com', NULL, '$2y$10$dd1HPRjjakX4LGNOolVuY.5fyTSEXqUd/JKOoQ.tplxzaQijPriCW', 'MEMBER', 'N', '62818659993', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-07-18 23:05:05', '2021-07-18 23:05:05'),
@@ -7773,9 +7869,9 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `le
 ('18e33b5f-2a0a-4a5d-be89-4cdaf8cfe0b5', 'Arlita nada putri', 'arlitanadaputri01@gmail.com', NULL, '$2y$10$050wK/v3IIrvqs5TYF.1vee/6vOx7TqiYkSJvtJ81l7.ta/fnghdC', 'MEMBER', 'Y', '089611370638', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-23 06:37:14', '2021-03-23 06:37:14'),
 ('18f10402-3d27-4518-9264-310e1423a154', 'Monica Istanti Heni Purwoningsih', 'istanti080579@gmail.com', NULL, '$2y$10$0IVtEtSqZi1/zEVj0HufOuSfeyE5.vMAm6z4UMX5NhfEHOCxwZIa6', 'MEMBER', 'Y', '082114929834', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-06-04 11:45:47', '2021-06-04 11:45:47'),
 ('191b94b3-f424-402e-8fef-acd1e7aae78b', 'Merlyn Sintia', 'garrents8@gmail.com', NULL, '$2y$10$Qj6qTyzTiB4905SYh6ZCyOKYOC1T32QxEJEvsYDSFNih7/Ta73jBm', 'MEMBER', 'N', '087788833459', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-14 08:28:18', '2021-07-14 08:28:18'),
-('191d824a-a217-4db1-a533-46aea48d49ab', 'Nila Julianingtyas', 'nilajulianingtyas@gmail.com', NULL, '$2y$10$RywLIUT/olOmFm77OTHNVOLIx4PltaVe95LYDoGT7ezBDUXprrsdm', 'MEMBER', 'Y', '085856637037', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-01-08 20:15:15', '2021-01-08 20:15:15'),
-('193c61cf-c2e6-4b25-a71b-6aa76dd4f033', 'Julian Hosada', 'dejurain@gmail.com', NULL, '$2y$10$V4Ltl7a9pz77BXGjhGx4xu2ad4MaipjE9DFL4RKpFVfnJFTUCIeB2', 'MEMBER', 'Y', '08153728827373', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-02-24 19:30:07', '2021-02-24 19:30:07');
+('191d824a-a217-4db1-a533-46aea48d49ab', 'Nila Julianingtyas', 'nilajulianingtyas@gmail.com', NULL, '$2y$10$RywLIUT/olOmFm77OTHNVOLIx4PltaVe95LYDoGT7ezBDUXprrsdm', 'MEMBER', 'Y', '085856637037', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-01-08 20:15:15', '2021-01-08 20:15:15');
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `level`, `aktif`, `kontak`, `id_sekolah`, `remember_token`, `created_at`, `updated_at`) VALUES
+('193c61cf-c2e6-4b25-a71b-6aa76dd4f033', 'Julian Hosada', 'dejurain@gmail.com', NULL, '$2y$10$V4Ltl7a9pz77BXGjhGx4xu2ad4MaipjE9DFL4RKpFVfnJFTUCIeB2', 'MEMBER', 'Y', '08153728827373', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-02-24 19:30:07', '2021-02-24 19:30:07'),
 ('193e503d-3f8a-4792-8618-3b43e9f29470', 'Joshe Maxiliano S', 'uuwauuuwau@gmail.com', NULL, '$2y$10$02e4gQSFY29HCLAe8LzsmOhBRoO7H8rEABvhz6oDNTPsGS8XGn1na', 'MEMBER', 'N', '087703384822', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-16 23:41:03', '2021-07-16 23:41:03'),
 ('195202dc-c48f-47f4-a955-36ece7a4b064', 'Fariz Ardiansyah', 'ardiansyahfariz@gmail.com', NULL, '$2y$10$G0P2aRAeAEzlLetiD6VkB.y/UlgSX5RGUwGKKE6efNo4Cvk5wYaQ2', 'MEMBER', 'Y', '081318770927', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-01-17 21:41:34', '2021-01-17 21:41:34'),
 ('195cd004-276e-4ee5-a67c-021443b07429', 'NUEL B.A', 'nuelbartholomeo@gmail.com', NULL, '$2y$10$RieLDR8MTGcgHtkAqlMvBuwUygiP3PnQ/0KxXZclF4I9O6lEYx/Z2', 'MEMBER', 'Y', '085646361533', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-01-11 05:25:58', '2021-01-11 05:25:58'),
@@ -7914,6 +8010,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `le
 ('2b78a6c8-78ed-46eb-ac37-330d445b4e7c', 'Misbahuddin Dakris', 'dakrismisbahuddin@gmail.com', NULL, '$2y$10$KF.wRMPH/CV9vxBxP7PYq.h4INZKkFRBS2AX153WWtNwtz6NhcMry', 'MEMBER', 'Y', '085242883798', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-15 22:38:36', '2020-12-15 22:38:36'),
 ('2b8e4a5c-b657-4732-a9ce-984a7c9f59fa', 'Ayesha Naira Parsa Ariawan', 'ayesha.naira21@nurulfikri.sch.id', NULL, '$2y$10$NPAzvjCa.frzXnyfBtXTZOXhhUATcK0oD5EHFbIWPs2v7IDlsvRZC', 'MEMBER', 'N', '081289620358', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-02 17:14:44', '2021-08-02 17:14:44'),
 ('2b9dbe3c-51d3-4ef5-a7ae-58abca346e52', 'PRISCILLA JULITHA BALE', '191210038@student.ibik.ac.id', NULL, '$2y$10$ZPVgRZxVPjc4ZLi/nBMQ/.GShOh7Oy7H8ENEt4awH4R6jJQYRaLp.', 'MEMBER', 'Y', '081338290713', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-09 04:54:12', '2021-03-09 04:54:12'),
+('2ba8cfda-068c-4a9d-9fcc-348676353663', 'Unit Test 1', 'unitest1@sekolah.sch.id', NULL, '$2y$10$XrPZ9ICIF2s27q8Gf5xJR.5yKVZmgzy63LUeQRKzjlJeq0zClQ5ay', 'MEMBER', 'Y', '081234567890', '076904eb-4e9d-4f0f-8b86-89fcb480b167', NULL, '2026-09-21 19:44:01', '2026-09-21 19:44:01'),
 ('2bbcab93-2c47-4613-99cb-b0b8ecc7e7dd', '0076428382', 'niputuayundaraistyaswari@gmail.com', NULL, '$2y$10$hezIavdUNULqynlY1Y57Tej3qHcN47HmChJPBky/plN14g32vhlAS', 'MEMBER', 'Y', '081339039947', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-02-05 19:09:50', '2021-02-05 19:09:50'),
 ('2bd33e4e-aecf-443e-becc-c7fd6ad0c713', 'Eva Silambi', 'eva@gmail.com', NULL, '$2y$10$va/qxclpAW5whRs0rjdar.EWjxu1SLVrGmPpkgxrLrGJGcIbaLUH.', 'MEMBER', 'Y', '082299776432', NULL, NULL, '2022-10-06 20:29:40', '2022-10-06 20:29:40'),
 ('2c03324c-22d2-4753-96c8-dcefcc214d29', 'TASIYA NAVARINA', 'Tasyanvrna@gmail.com', NULL, '$2y$10$AkIn9jBtJhuGS/a42JKcredvE76C/Lv4yzDUsyJ7LjBNh2OGWw0Z.', 'MEMBER', 'N', '08989077007', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-06 01:37:11', '2021-08-06 01:37:11'),
@@ -7952,10 +8049,10 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `le
 ('3085fe54-1d99-46d4-a610-b8f412073200', 'Nur aini', 'marhaiynimilsand@gmail.com', NULL, '$2y$10$oVSRU8t3kJ8X0WZh4rKgROCCUAKHhir9VwTgcPiOEcA9JwKBSqq3C', 'MEMBER', 'Y', '082251971463', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-16 19:21:30', '2020-12-16 19:21:30'),
 ('30883fb5-0646-404d-a338-7cea7a766009', 'Yafi', 'yafisiregar19@gmail.com', NULL, '$2y$10$GOUPoQHcfrMfix.Z3TqVjOuHfGbvpTnzY8KF.MHQCOuniLXIDiBrK', 'MEMBER', 'N', '085782218495', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-14 21:33:24', '2021-07-14 21:33:24'),
 ('308f71ab-07e1-4d61-bc7a-372ee19d058e', 'Tarlee', 'JEN0024@traralsc.vic.edu.au', NULL, '$2y$10$gMgpt39HJi1PWFiQUjeO0OkRAEGU.FEqJef11rJWNDI8Z5v.vZqVu', 'MEMBER', 'N', 'don\'t have one', '12be3814-19b6-4520-b096-d3f1c90042b6', NULL, '2021-08-08 16:21:27', '2021-08-08 16:21:27'),
-('30a86337-d4ab-4390-bd8f-91366c9d0ce3', 'Abel', 'anabelle.azra@gmail.com', NULL, '$2y$10$xpwmkocAxg55nXX2zcXoIejVF2nwT1mjWbY9ene9VkNp0o/sD/1nC', 'MEMBER', 'N', '6281918501622', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-07-16 00:37:33', '2021-07-16 00:37:33'),
-('3108c355-72f8-49f5-b2eb-7f2a7b15cebb', 'Isaac Dylan Cen', 'p2021_8249@sttheresia-jkt.sch.id', NULL, '$2y$10$qX4bgaupjO2VAlTe1VhKauSZo/pS41LTwJ0hLTZEF2wHPqudogkTi', 'MEMBER', 'N', '08111577550', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-07-22 17:55:29', '2021-07-22 17:55:29'),
-('31560e8d-97c7-4a62-b322-7c8af97fac70', 'Aplonia Manoe', 'aploniamanoe@gmail.com', NULL, '$2y$10$v5XakTVY..aIeX1pDXtVWutIzyKshVDmpmD2GjRHNDKcEZdKrTh2O', 'MEMBER', 'Y', '081357571465', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-06-11 03:36:16', '2021-06-23 00:49:23');
+('30a86337-d4ab-4390-bd8f-91366c9d0ce3', 'Abel', 'anabelle.azra@gmail.com', NULL, '$2y$10$xpwmkocAxg55nXX2zcXoIejVF2nwT1mjWbY9ene9VkNp0o/sD/1nC', 'MEMBER', 'N', '6281918501622', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-07-16 00:37:33', '2021-07-16 00:37:33');
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `level`, `aktif`, `kontak`, `id_sekolah`, `remember_token`, `created_at`, `updated_at`) VALUES
+('3108c355-72f8-49f5-b2eb-7f2a7b15cebb', 'Isaac Dylan Cen', 'p2021_8249@sttheresia-jkt.sch.id', NULL, '$2y$10$qX4bgaupjO2VAlTe1VhKauSZo/pS41LTwJ0hLTZEF2wHPqudogkTi', 'MEMBER', 'N', '08111577550', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-07-22 17:55:29', '2021-07-22 17:55:29'),
+('31560e8d-97c7-4a62-b322-7c8af97fac70', 'Aplonia Manoe', 'aploniamanoe@gmail.com', NULL, '$2y$10$v5XakTVY..aIeX1pDXtVWutIzyKshVDmpmD2GjRHNDKcEZdKrTh2O', 'MEMBER', 'Y', '081357571465', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-06-11 03:36:16', '2021-06-23 00:49:23'),
 ('318d6203-0027-4f4a-8914-83b4078390ef', 'Yohanes Marcell Saibasa Siregar', 's2020_11555@sttheresia-jkt.sch.id', NULL, '$2y$10$y5JKmLikDappqT/ydbLV.uv7goHN7rh.QpDJ.eXHnuE7LYbSNSDOq', 'MEMBER', 'N', '081295768880', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-09 05:50:53', '2021-08-09 05:50:53'),
 ('31b6565a-d5bc-4d37-a26a-ef0ed77fc7b9', 'Dian dra Aditiya Pratama', 'diandrapratama.08@gmail.com', NULL, '$2y$10$ff2BFjIV4ZVFcRpLcxh.V.dguif/YycACfB4LO4NkseKarXA84BEa', 'MEMBER', 'N', '082299179660', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-14 21:37:40', '2021-07-14 21:37:40'),
 ('31d4e2e7-3ddc-42fa-bd66-e8a5520c2df3', 'tes', 'tes@gmail.com', NULL, '$2y$10$Nk.5uEHb8rXMn2f2agcSS.jtQYoXW4pFgKLMAkZM/v8TDewmSKR/C', 'MEMBER', 'Y', NULL, '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-15 22:35:14', '2021-03-15 22:35:14'),
@@ -8087,6 +8184,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `le
 ('46d21380-2abc-4ada-875f-4d8eb0f0ad67', '0098204507_andra@santaursula-bdg.sch.id', '0098204507_andra@santaursula-bdg.sch.id', NULL, '$2y$10$Bqqc8FLR4jsmThuPxil1Y.pKDaKFY3UpGAyD.gH.7beLVrMMSpnWK', 'MEMBER', 'N', '82117675589', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-08-09 17:27:50', '2021-08-09 17:27:50'),
 ('46dd19d7-6012-402b-904c-77941513da05', 'Suhanna T', 'suhannatahir95@gmail.com', NULL, '$2y$10$qd7RzkSRUsd8sEbefTZ/eu0aDLgAFA60KS5FqsRk5kYO79XxtVqeC', 'MEMBER', 'Y', '082345338450', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-16 19:23:11', '2020-12-16 19:23:11'),
 ('46f9de55-638d-4b1f-9a3c-a36a18cebea8', 'Kelliesantoso', 'd2016_6091@sttheresia-jkt.sch.id', NULL, '$2y$10$OeXc.FQqBPV2FnL/obkj3.4mtRnkJKdmb3PavT3OD/YSa3jo2yTVa', 'MEMBER', 'Y', '62 812-8430-2847', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-24 20:22:58', '2021-03-24 20:22:58'),
+('470a0359-d215-4f9b-9bdd-cf4647bdb1de', 'tes2', 'tes2@gmal.com', NULL, '$2y$10$bVjPX5mb8QJbdGwS0UqZaOGfPuWgB7rt3R0fBNCsjaIUnDgrDFfAa', 'MEMBER', 'Y', '06576554343', '076904eb-4e9d-4f0f-8b86-89fcb480b167', NULL, '2026-09-20 20:19:05', '2026-09-20 20:19:05'),
 ('470c8d43-bb0d-469e-8861-fd8d9a9e641e', 'Christine', 'christineviola04@gmail.com', NULL, '$2y$10$jOfqWfcsZs1szEJGTRDze.NEAk5KXK.8v.bM2lLTsQhUzbLo0gPX.', 'MEMBER', 'Y', '081316063426', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-22 18:58:49', '2021-03-22 18:58:49'),
 ('476d1ef5-88b4-4c5c-94c5-3c16b447abf5', 'Aesha Willydea R', 'aeshawilly@gmail.com', NULL, '$2y$10$DF1.hid7MifdWDiOYONOdeu2IxGVjqo9cK/untzM36umP5.MxMuwK', 'MEMBER', 'N', '082354314696', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-08 19:17:01', '2021-08-08 19:17:01'),
 ('47850c19-1434-476f-8988-06e5fda6dc6f', 'rafa ammar ghulam', 'rafaghulam23@gmail.com', NULL, '$2y$10$1hw.SC25oM2xelTFr1.RkuBh7kfcCeJT7QHfk50NgOM00M.qlR3a6', 'MEMBER', 'N', '087772426022', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-08-09 17:08:11', '2021-08-09 17:08:11'),
@@ -8131,11 +8229,11 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `le
 ('4e0f5a8e-a3cb-49d0-a4bc-b83e8b9faa2e', 'Arslan', '0135793271@citraazzahra.sch.id', NULL, '$2y$10$AVCKvrtVVyLCsbUEFze26eRHbHy9A73znU.MtSS0cf1p8mZODdPBS', 'MEMBER', 'N', '08388888476', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-29 06:21:12', '2021-07-29 06:21:12'),
 ('4e192c02-366b-4d9d-853d-91037adc1e9d', 'Marshanda', 'anne.marshanda@gmail.com', NULL, '$2y$10$QVP3P6XPQdND/G/OPWOq9OW/I3rW/4bXZbhLqjMIUKmG14nRrmRfW', 'MEMBER', 'Y', '082111937259', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-05-09 23:59:40', '2021-05-09 23:59:40'),
 ('4e557920-7582-4e0f-b429-0eabae163b1f', 'Farhan nurdian', 'farhannurrdian37@gmail.com', NULL, '$2y$10$wa4X8.sx4QAJ1zw4NS9tbeuMBNG3n9PWFS2Zhp7eoBqNAQR3UIIgC', 'MEMBER', 'N', '089515560096', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-20 04:23:10', '2021-07-20 04:23:10'),
-('4e7f81c4-cb1e-41aa-b2ea-e2217656fa03', 'Andi Putri Hapsa', 'andiputrihapsa@gmail.com', NULL, '$2y$10$XaGsN8g0ljcPBVFbAo05du0R0zmI/jWKJ.7i2vNXJDR6WnT1xY45a', 'MEMBER', 'N', '082347257283', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-03 17:35:48', '2021-08-03 17:35:48'),
+('4e7f81c4-cb1e-41aa-b2ea-e2217656fa03', 'Andi Putri Hapsa', 'andiputrihapsa@gmail.com', NULL, '$2y$10$XaGsN8g0ljcPBVFbAo05du0R0zmI/jWKJ.7i2vNXJDR6WnT1xY45a', 'MEMBER', 'N', '082347257283', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-03 17:35:48', '2021-08-03 17:35:48');
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `level`, `aktif`, `kontak`, `id_sekolah`, `remember_token`, `created_at`, `updated_at`) VALUES
 ('4e991e3c-f899-47a5-9590-c1cd969a58d3', 'Anindya Putri', 'Putrianindya517@gmail.com', NULL, '$2y$10$RNv/OUv9NesmA4x/pr/UM.kKeWvLayL0VfT97IEsIDDLdi/m43luG', 'MEMBER', 'Y', '085947732960', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-08 16:22:20', '2021-03-08 16:22:20'),
 ('4ebdff4a-52d3-4a48-a075-2ddd765472d9', 'hana01', 'hana01@gmail.com', NULL, '$2y$10$ikkjg3c.WQUsKakt3vEJRuEFWWz1PGKyUUibgYmWffINGCOPru4jq', 'SUPERUSER', 'Y', '089333333333', '076904eb-4e9d-4f0f-8b86-89fcb480b167', NULL, '2022-08-31 22:46:53', '2022-08-31 22:46:53'),
-('4edb1138-10f3-44ef-9532-f1184fec3789', 'Yutta Nismara', 'cantikmanis2803@gmail.com', NULL, '$2y$10$vlBDNwH81EuR5c8E3yam6.8FX6cJJF68LyKJn5J9F8HQi4mamJZf6', 'MEMBER', 'Y', '082237005088', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-03 06:37:12', '2021-07-03 10:39:12');
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `level`, `aktif`, `kontak`, `id_sekolah`, `remember_token`, `created_at`, `updated_at`) VALUES
+('4edb1138-10f3-44ef-9532-f1184fec3789', 'Yutta Nismara', 'cantikmanis2803@gmail.com', NULL, '$2y$10$vlBDNwH81EuR5c8E3yam6.8FX6cJJF68LyKJn5J9F8HQi4mamJZf6', 'MEMBER', 'Y', '082237005088', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-03 06:37:12', '2021-07-03 10:39:12'),
 ('4ee80759-02fe-4dc9-aff6-14922860203f', 'deigra', 'steph.larya@gmail.com', NULL, '$2y$10$uvyBroI4xu8waNLJ6eaf3Ou6cAm7wr0DOJ6ZXNUy4yX.S7eNg43zW', 'MEMBER', 'N', '081332672879', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-18 17:22:34', '2021-07-18 17:22:34'),
 ('4f0e48db-5dc3-4dd6-bcbc-fa7c56e2f458', 'Cahya', 'cahyapranata8@gmail.com', NULL, '$2y$10$FsV9sWEDtBl2k3HZO0SrYeeCg2HWOLMc8eG0TMo3tMdI3AYkaERiK', 'MEMBER', 'N', '83836851777', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-01 19:27:06', '2021-08-01 19:27:06'),
 ('4f21db11-7dd2-43e9-b3fe-f7258b0e9829', 'Hanifah Salsabila', 'eskiw@outlook.com', NULL, '$2y$10$Fv4Y29hi0NqjbLJb0V7isObCCZhN2irmCTQTxsN7yrhi5eKe5dpzO', 'MEMBER', 'Y', '081230791377', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-28 22:36:40', '2021-03-28 22:36:40'),
@@ -8194,6 +8292,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `le
 ('57a8226c-6da9-45ec-b5d5-12eb6e2b203c', 'annika', 'd2017_6177@sttheresia-jkt.sch.id', NULL, '$2y$10$lRlIxdzYg/1mNg5/qfNV1OqFFsc0vkb9ykK9hFcLd64IJqAgBNKv6', 'MEMBER', 'Y', 'lalala', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-29 00:43:58', '2021-03-29 00:43:58'),
 ('58164a37-8e7e-4556-a32e-e4ba0fdcf2be', 'Fransesca Agnesa Manasye Setiawan', 'keishya.setiawan88@gmail.com', NULL, '$2y$10$UX.lrexGZq/Aqi02t8cKeuU./jeh7a8c9UfHXrDsg/XJIAKb1mzF2', 'MEMBER', 'Y', '082116388770', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-06-13 18:10:31', '2021-06-23 00:49:04'),
 ('582fa525-3fe4-4a71-be78-215dd8a60028', 'Christin Joane Novaline', 'christinnovaline@santamaria3.sch.id', NULL, '$2y$10$4T9TuzIcBjogRybIbDv/Qe3MVF4LyvzGXc/.Zbe8sTAgE29enOXka', 'MEMBER', 'Y', '08818374280', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-06-28 10:57:41', '2021-07-03 10:40:48'),
+('58341cc2-9c62-418b-b2cb-aa893ca88ebb', 'tes4', 'tes4@gmal.com', NULL, '$2y$10$RTbxT5mPsF.ZSVbzoP.Dv.QJVszEeEyvYF4JSzYnOhOGsUHtQOJ7C', 'MEMBER', 'Y', '8746453', '076904eb-4e9d-4f0f-8b86-89fcb480b167', NULL, '2026-09-21 17:50:03', '2026-09-21 17:50:03'),
 ('583a951a-bb90-47b5-9056-0e5b967039a1', 'Ayu Safitri', 'ayus02077@gmail.com', NULL, '$2y$10$I/.Ms0UaNF/3zWPpMmKwbuTry5EZFD.ae502PEsifjA8Af/bUn/Da', 'MEMBER', 'N', '082322800487', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-08-09 19:52:01', '2021-08-09 19:52:01'),
 ('583e0807-ff9e-4f3c-b222-d8bc1b655c7b', 'Deifilia', 'deifilia.eugin@gmail.com', NULL, '$2y$10$WScs2oQdaQMb7fdsz/uZnOeUJx7enBzwbol4iesIepDHqn.cCaO2W', 'MEMBER', 'Y', '08984558757', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-02-28 18:15:22', '2021-02-28 18:15:22'),
 ('584d91af-8ad0-4746-9c0d-0a34fb171346', 'arfan', 'arfandahland@gmail.com', NULL, '$2y$10$dpEsmtZks1GJPqFwtQAtgOSP444IINYGnJASwIBRbdH.XHRS/2BI6', 'MEMBER', 'Y', '082198606806', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-01 02:54:23', '2020-12-01 02:54:23'),
@@ -8308,15 +8407,16 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `le
 ('68e7e3ea-a53d-4fb2-ba62-c0296f10802e', 'Shafira Dhita Triyuliana', 'dhita.triyuliana59@gmail.com', NULL, '$2y$10$YuLhvsDwHaf8HUK0A0E2Muns1gVRZknh0YGcY.rvZ2zpkLMRKi.CW', 'MEMBER', 'N', '085701330626', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-21 20:22:58', '2021-07-21 20:22:58'),
 ('690ebe89-b896-4792-9e1f-c09ccbf06c99', 'Andien Talitha', 'Andien.talitha27@gmail.com', NULL, '$2y$10$98mh69coS24DLTn.SAv82OIJ9xsj0YqF8GRfgB2cmBTS6/Wt36gb.', 'MEMBER', 'N', '0895364424484', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-02 07:39:58', '2021-08-02 07:39:58'),
 ('694a7431-fdc8-4c03-b96c-12efa23fde3e', 'Jonathan', 'jonathan0308lauderic@gmail.com', NULL, '$2y$10$yJPKGUBcR96Blt9Nzj6gqOfjIPmIRVEc/CaXu040V8EXa1z8f73GW', 'MEMBER', 'Y', '08119520308', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-02-19 21:02:56', '2021-02-19 21:02:56'),
+('69a1781c-df79-4a2b-8545-7189bd59347b', 'Contoh Siswa', 'contoh@sekolah.sch.id', NULL, '$2y$10$ZZMaw0mZQn8LddFJRSJ19eOtHqjfuBOJBt8SQ7KVpyZuUiZVWRlj.', 'MEMBER', 'Y', '081234567890', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2026-09-21 19:38:22', '2026-09-21 19:38:22'),
 ('69a71fbc-ea94-4f8b-938d-be3209fba6ca', 'Giacinta sasi kirana', 'arygiacintasasi@gmail.com', NULL, '$2y$10$7ww.POqKUC4HNmng1qkYcOuvnFincV6LMBIIXDlMT0hIREd2s/qjy', 'MEMBER', 'N', '081273627130', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-27 04:50:43', '2021-07-27 04:50:43'),
 ('69fe5da5-0d40-4e10-8e17-ef07602c9db3', 'Septian Rhamdan', 'septianrhamadan09@smp.belajar.id', NULL, '$2y$10$q32OP4WxAji32/EALgsMMuuxigax5HIaGZGy5q8codLX5rXSuFLY2', 'MEMBER', 'N', '08817439805', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-08 07:38:23', '2021-08-08 07:38:23'),
-('6a191fce-60e2-4848-862f-a4e88042f3a8', 'Annisa Rizqi Fauziah', 'annisrfauziah14@gmail.com', NULL, '$2y$10$D/e/WEAA2Wifc44YygigeOlWeAdrRfgLkJkYLNfPgl7YpJDdntNTK', 'MEMBER', 'Y', '+62 822-4601-0571', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-14 18:19:10', '2020-12-14 18:19:10'),
+('6a191fce-60e2-4848-862f-a4e88042f3a8', 'Annisa Rizqi Fauziah', 'annisrfauziah14@gmail.com', NULL, '$2y$10$D/e/WEAA2Wifc44YygigeOlWeAdrRfgLkJkYLNfPgl7YpJDdntNTK', 'MEMBER', 'Y', '+62 822-4601-0571', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-14 18:19:10', '2020-12-14 18:19:10');
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `level`, `aktif`, `kontak`, `id_sekolah`, `remember_token`, `created_at`, `updated_at`) VALUES
 ('6a265755-3024-4aa7-be22-8bd388761fc9', 'Ardini Suryati', 'ardini.suryati@salman-alfarisi.com', NULL, '$2y$10$GMZcp9gzfihxa6ZIxzasxeaKBDREF2aoj0/4tijvLYkF6yHzmEOwq', 'MEMBER', 'Y', '081310320552', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-05-05 21:01:28', '2021-05-05 21:01:28'),
 ('6a29114f-da02-4557-a90a-9ec7172e5ff2', 'MUJIBI', 'mujibidahlan@gmail.com', NULL, '$2y$10$ekY058GJPYmzAMYdKfkJTeoHeWOlTlwE0RDMW5C.pPtNQTddxll0S', 'MEMBER', 'Y', '085778114436', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-01-14 18:43:19', '2021-01-14 18:43:19'),
 ('6a54ac3e-d587-453e-be7f-ce4cf597c856', 'Radi Boma R', 'radi_raharja@smpmydepok.sch.id', NULL, '$2y$10$qCVRwN3ngHWeknEe1aQaoe79xEdnj3DmL8Dxz0EBgIskgUUrLGBd2', 'MEMBER', 'Y', '081236538939', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-23 19:35:34', '2021-03-23 19:35:34'),
 ('6a6b2dbc-348e-4e83-a676-1ccd32d5bf89', 'Reylita Anggraeni', 'litalitolui@gmail.com', NULL, '$2y$10$DwSRR8sy8.KwwkP7JhWsgu36yjmlsYvcosD7ik7Bba.9YMeURHt6m', 'MEMBER', 'N', '085803065744', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-06-29 19:26:57', '2021-06-29 19:26:57'),
-('6a6ee67c-0939-4b4e-89e3-67a2583f669d', 'Dzulhijah Alkayyis Rayis', 'hijahdzul8@gmail.com', NULL, '$2y$10$H0uewjUpq5yEdIw8c7/9huPmOQy03TVT2rTDQeUZ2bNNIFBS9EzI6', 'MEMBER', 'Y', '082329495850', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-05 00:09:20', '2020-12-05 00:09:20');
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `level`, `aktif`, `kontak`, `id_sekolah`, `remember_token`, `created_at`, `updated_at`) VALUES
+('6a6ee67c-0939-4b4e-89e3-67a2583f669d', 'Dzulhijah Alkayyis Rayis', 'hijahdzul8@gmail.com', NULL, '$2y$10$H0uewjUpq5yEdIw8c7/9huPmOQy03TVT2rTDQeUZ2bNNIFBS9EzI6', 'MEMBER', 'Y', '082329495850', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-05 00:09:20', '2020-12-05 00:09:20'),
 ('6a7e651c-7a08-41db-9a48-82fb19444108', 'Ridha Maylani Triputri', 'maylaniridha@gmail.com', NULL, '$2y$10$mZYw5VcR5toY5Yp9vZOIEuw0mjYmg2dTjorudEOdNRkQdRbKoLl5i', 'MEMBER', 'Y', '085363505253', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-14 18:18:48', '2020-12-14 18:18:48'),
 ('6a9c3aa8-2d9b-4c3e-a875-2551594ee983', 'Erma Rahmawati', 'rahmaerz17@gmail.com', NULL, '$2y$10$RwSuaoYOAKgsutu1.ADolORRd7oH1gbSSq2JxFPBr1JUapzke49qq', 'MEMBER', 'N', '085603876853', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-07-21 22:02:52', '2021-07-21 22:02:52'),
 ('6aedfc0a-d6bf-475c-a6ca-161007337540', 'Putri Tazkiya', 'putritazkiya112@gmail.com', NULL, '$2y$10$CSlbPsHf3JFGc4jUzTFSvebIJEQZyo/BPu8kRHyciZTGd2MgyNukW', 'MEMBER', 'Y', '083131635316', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-14 18:20:31', '2020-12-14 18:20:31'),
@@ -8398,6 +8498,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `le
 ('7634f42a-6404-45d4-aefb-58758a85d4d9', 'Petra Ardia', 'petraardias@gmail.com', NULL, '$2y$10$hAPIKUV4ZSDNOFMhWi0jkuaoPo3PPDAY6BxVtzVAFZlxQ.j5Xm//2', 'MEMBER', 'Y', '081335292295', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-06-29 05:26:39', '2021-07-03 10:39:51'),
 ('763ebbda-c7ae-4805-ac45-79089aeb3251', 'CUPApi', 'aleahha12@gmail.com', NULL, '$2y$10$7ngMmWRpg.Ijdj4yBxmYWuU661bUsJWRlV7pLIyULdlg0V3q3fg8i', 'MEMBER', 'Y', '082249919946', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-02-28 20:56:25', '2021-02-28 20:56:25'),
 ('7661896a-6734-4b59-b3c5-ef3e0c940f71', 'SATRIA RAMADAN', 'satriaramadan697@gmail.com', NULL, '$2y$10$IZGLqwrQqILnV/oOcHzU6e1JiGnpL6h0CkGHxplZYOpms0ODpQZ4C', 'MEMBER', 'Y', '082264781600', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-15 22:19:37', '2020-12-15 22:19:37'),
+('766c76f1-ef3d-4df4-a247-aa6fc8883cb4', 'tes5', 'tes5@gmal.com', NULL, '$2y$10$x5WiqBC8aXAezs5FtNg1CeC2kV.sfB6WnRjph91c32hn14dU.Rkji', 'MEMBER', 'Y', '06576554343', '076904eb-4e9d-4f0f-8b86-89fcb480b167', NULL, '2026-09-21 17:52:40', '2026-09-21 17:52:40'),
 ('7698d033-4c7d-4cb6-8c39-77c7a95742f9', 'Ni Putu Dian Indrayani', 'dianindrayanii@gmail.com', NULL, '$2y$10$cmJDyoNMOnK32gFCHFcPIe0DtObWUphwRr4WzuFFaRY.RnXPdi0mS', 'MEMBER', 'N', '081236883824', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-15 17:41:07', '2021-07-15 17:41:07'),
 ('769d9f9c-b420-4b60-8e9d-e97f13bd5db6', 'Andrew Fritzgerald Kenardi', 'andrewkenardi@gmail.com', NULL, '$2y$10$5atyq23z.TIzxvhDNtDTT.hYbFPfcpl6tplqs0ddPrbQ4265hw3jy', 'MEMBER', 'Y', '087822048000', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-01-11 20:19:12', '2021-01-11 20:19:12'),
 ('76e08bc0-e92b-4d42-ae8d-830fa7f8a649', 'Nathalina', 'nathalina2003@gmail.com', NULL, '$2y$10$2PEJN8B795dtBM4ZatRbEu7GLbZgS0OpsH2sNG8/tz7kaIp2LT6Fa', 'MEMBER', 'Y', '081333127559', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-14 05:44:11', '2021-03-14 05:44:11'),
@@ -8488,14 +8589,14 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `le
 ('874fbde0-ec29-4bb5-ba34-903b466bb579', 'NESYA SAUSAN PUTRI AQILA', 'endang.ekowatie@gmail.com', NULL, '$2y$10$JXClnLQ8f.xPU7ZjZwzRkufi2fbcpRtNFMhXBqA6NoRiCtQ.o5GiW', 'MEMBER', 'N', '08119923548', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-15 02:59:28', '2021-07-15 02:59:28'),
 ('87763d85-c139-4c63-98bd-bce41cccf7b3', 'Attina Salsa Billa', 'attinasalsabilla025@gmail.com', NULL, '$2y$10$CUPlg5kvMUmkCMZVgqIhb.TMyFJ/8ymeQ3HYd1iYGUThXi.YEXe.e', 'MEMBER', 'Y', '082398068264', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-03 00:11:12', '2020-12-03 00:11:12'),
 ('8794a58c-c725-4621-a6a6-e7e81e595c29', 'Amalia Rahmawati', 'amalia.rahmawati30@gmail.com', NULL, '$2y$10$bDwRo/OUR46W20P5Kchx9utaqmPBekA/vffCEhEjyAEoMhzC/OJRG', 'MEMBER', 'Y', '0895355210181', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-22 16:51:18', '2021-03-22 16:51:18'),
-('87dc0f94-4e95-4044-8cfb-cb120826a20d', 'Davy Lava Addzikria Rochman', 'davilava8@gmail.com', NULL, '$2y$10$Ky63stQ2clh.F9IBn/fPde3S.GfsB9.o7oWiGfqSUFyQNI8fkmwIa', 'MEMBER', 'Y', '082122130942', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-23 18:12:51', '2021-03-23 18:12:51'),
+('87dc0f94-4e95-4044-8cfb-cb120826a20d', 'Davy Lava Addzikria Rochman', 'davilava8@gmail.com', NULL, '$2y$10$Ky63stQ2clh.F9IBn/fPde3S.GfsB9.o7oWiGfqSUFyQNI8fkmwIa', 'MEMBER', 'Y', '082122130942', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-23 18:12:51', '2021-03-23 18:12:51');
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `level`, `aktif`, `kontak`, `id_sekolah`, `remember_token`, `created_at`, `updated_at`) VALUES
 ('88039386-3622-45fd-9605-b928b8998780', 'Lydia', '0068333406@students.reginapacis.sch.id', NULL, '$2y$10$DLcM01n6bOMmQ26DdWNs8eOBcpQPKUJACm9hXGdAPVC3jvM3BBjEa', 'MEMBER', 'Y', '081772304440', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-02-15 06:01:21', '2021-02-15 06:01:21'),
 ('8807f4c4-5854-48b9-bcf7-d6a1d6f5a905', 'jes', 'jessaya.handoko@gmail.com', NULL, '$2y$10$ACaWzBkfY.ipTU3WWIxdqOkh4wwUc9DGAuEAhX1DvfsqVkTV0h2H2', 'MEMBER', 'N', '081388707030', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-25 19:55:51', '2021-07-25 19:55:51'),
 ('88212226-7086-405a-9659-47233c9dddf5', 'Jessica Ho', 'jessicaho739@gmail.com', NULL, '$2y$10$0mtf.Nyhdxrjjow8o6RLKuR6.tZGdinE.vyLe2nTlFQNB/t/vCIW2', 'MEMBER', 'N', '085718133038', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-06-09 08:56:43', '2021-06-09 08:56:43'),
 ('8883cec8-2b91-4c86-aaae-dbeda1704600', 'Rafael', 'rafaeliqbal46@gmail.com', NULL, '$2y$10$aBWrTCj2h.hqPTf6jzTJj.4i4yjHtdJD7acyq6TBTrAUOFgOkRHHy', 'MEMBER', 'Y', '081387417749', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-24 07:24:03', '2021-03-24 07:24:03'),
 ('888e45c5-f1af-48e9-9aea-ef544a864d21', 'Pascalia Putria Hanindya', 'hanindyacici@gmail.com', NULL, '$2y$10$J3Rl9EKaVR/uTFHXISGGvOyc8rUrGh7h42o1bGgfaAKXQ975AU/CK', 'MEMBER', 'Y', '08122604639', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-01-26 20:58:44', '2021-01-26 20:58:44'),
-('88c2824c-82c3-479a-bb76-10e3e8d1380c', 'LAURENSIA NATANIA NINTARIA HUTAGAOL', '0069865866@STUDENTS.REGINAPACIS.SCH.ID', NULL, '$2y$10$fkTZgPc8X/jexLw.oOUry.kXbCrJGvyYeywHmNqN5hsXxJxf1FQIq', 'MEMBER', 'Y', '081218154029', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-01-24 18:23:03', '2021-01-24 18:23:03');
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `level`, `aktif`, `kontak`, `id_sekolah`, `remember_token`, `created_at`, `updated_at`) VALUES
+('88c2824c-82c3-479a-bb76-10e3e8d1380c', 'LAURENSIA NATANIA NINTARIA HUTAGAOL', '0069865866@STUDENTS.REGINAPACIS.SCH.ID', NULL, '$2y$10$fkTZgPc8X/jexLw.oOUry.kXbCrJGvyYeywHmNqN5hsXxJxf1FQIq', 'MEMBER', 'Y', '081218154029', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-01-24 18:23:03', '2021-01-24 18:23:03'),
 ('88d4c331-a960-448f-9628-2f4754347bad', 'Muhammad Abdul Jalal', 'jalalabdul16603@gmail.com', NULL, '$2y$10$xAD42.3JIvcpU5B.bcvVs.nsmx4QvkZcL.6tUSsOwESmIZJkjG2Im', 'MEMBER', 'N', '085643328071', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-26 22:56:19', '2021-07-26 22:56:19'),
 ('88e23233-9a22-48ce-8440-1283f6096714', 'dexter harvard makmur', 'p2020_8081@sttheresia-jkt.sch.id', NULL, '$2y$10$gQ5vrQ1AwZD6/bIW9rCXYOvTlQQaXAz6D/b98Q8yokJ7vLzY6hqN.', 'MEMBER', 'N', '082113880756', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-08-02 22:16:55', '2021-08-02 22:16:55'),
 ('892a2a4a-fa55-48d4-b922-23400615c4c2', 'Gabriella Vidiani Tandean', 'gabriella.vidiani.smp.20.23@santamaria.sch.id', NULL, '$2y$10$.rH2ejcFKOefV1MCqf1kYexu4LmWFPXtfaXXxzm8GgDRjd1K89Cni', 'MEMBER', 'N', '081330130696', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-07-28 15:58:27', '2021-07-28 15:58:27'),
@@ -8667,14 +8768,14 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `le
 ('a0204c6f-9dc9-4016-8a71-8007403223e9', 'Muhammad Fauzan HB', 'archery.fauzan@gmail.com', NULL, '$2y$10$CQ9E1MIiCv3mmV/i9fqNNOAOyUB/t.y8BrFb2k.i4A64Ixk1Mcabi', 'MEMBER', 'Y', '06282296493215', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-14 18:20:49', '2020-12-14 18:20:49'),
 ('a0261b2c-8076-4a40-9fe6-0516eb1ad4a9', 'Delia Paramita', 'Paramitadelia889@gmail.com', NULL, '$2y$10$EJ7r0..ia3hYgWsHUoDm9ukk5Mf86ixaf2JEt.37p87OhiQXJnppS', 'MEMBER', 'Y', '0812 9541 1329', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-25 23:54:26', '2021-03-25 23:54:26'),
 ('a03be8de-5b93-4be5-bd41-bbd7508aab9c', 'Aldy', 'Aldymubaraq1@gmail.com', NULL, '$2y$10$m4ufiYW9TNSIHm3.HcrXi.1cS5n2HZYryNtLDalUzAg6OWdyw90KW', 'MEMBER', 'Y', '085342538073', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-16 20:10:25', '2020-12-16 20:10:25'),
-('a083f829-91cf-4573-9648-6be464c3c456', 'Bintang Asadel', 'bintabin24@gmail.com', NULL, '$2y$10$HQE7qCqrPZ0/lplubv9pw.BA/P2JA.h/OuiVFxG4U1t4UXdupdtce', 'MEMBER', 'Y', '081513967855', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-16 19:52:50', '2021-03-16 19:52:50'),
+('a083f829-91cf-4573-9648-6be464c3c456', 'Bintang Asadel', 'bintabin24@gmail.com', NULL, '$2y$10$HQE7qCqrPZ0/lplubv9pw.BA/P2JA.h/OuiVFxG4U1t4UXdupdtce', 'MEMBER', 'Y', '081513967855', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-16 19:52:50', '2021-03-16 19:52:50');
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `level`, `aktif`, `kontak`, `id_sekolah`, `remember_token`, `created_at`, `updated_at`) VALUES
 ('a0dfd0aa-c297-460a-b733-4fbe535fb0d9', 'Fahmy faudzan', 'fahmyfaudzan3@gmail.com', NULL, '$2y$10$PeBrYRUoQ9PbyDPt8MzXh.okA1BtNXLiwO0KrZoQ153cj6NSNS3j6', 'MEMBER', 'Y', '085210295520', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-18 00:54:42', '2020-12-18 00:54:42'),
 ('a124549c-dd34-4ebb-aa84-d1e2be625bea', 'Jonathan', 'jonathan0308lauderic@gmail.com', NULL, '$2y$10$eobcB4SJpx7pQRPtM3T3VejQFfuGTatw6nN1rFomTGDigPBTkYp7m', 'MEMBER', 'Y', '08119520308', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-02-19 21:03:19', '2021-02-19 21:03:19'),
 ('a135d23c-1103-400f-aa39-199c50e08a51', 'Haykal', 'haykalakc@gmail.com', NULL, '$2y$10$BozVlSQi4pa2wnkEErSg5ubJ61skY5.XUdMu2ivKXDDJ3htUSRAEG', 'MEMBER', 'Y', '085649286770', '3d5f4953-86f3-4add-86eb-5ac066dc9ed3', NULL, '2022-10-10 23:27:17', '2022-10-10 23:27:17'),
 ('a180ce9c-0c5c-4cdd-85f7-69e657f03b7c', 'valora', 'valjaswang@gmail.com', NULL, '$2y$10$YfOG0X3.MrGlCsi6hYxRhuT6m7qtvWIk4dFjjyE9rp.XqJeZobQGe', 'MEMBER', 'N', '085776302880', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-11 00:45:23', '2021-07-11 00:45:23'),
 ('a19bd2b2-39cc-4cad-9ffb-723c408cb33b', 'Aldi Susanto', 'aldisusanto648@gmail.com', NULL, '$2y$10$TYU9Bbst/IlWf33q2qYlXuAUky0js5p/KqTOyzoSIClU7tvGH9iWC', 'MEMBER', 'Y', '0895334255395', NULL, NULL, '2022-09-30 20:49:36', '2022-09-30 20:49:36'),
-('a1ac5a37-d261-4f2b-8c4e-d986efe41a30', 'Quinn', 'valerie.audriell.smp.21.24@santamaria.sch.id', NULL, '$2y$10$p9Nda8ssXdESbDqYBXHePO2BMQdISKxo3sGQmLqEBQgIj4iMXb/qm', 'MEMBER', 'N', '08111353301', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-20 16:34:59', '2021-07-20 16:34:59');
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `level`, `aktif`, `kontak`, `id_sekolah`, `remember_token`, `created_at`, `updated_at`) VALUES
+('a1ac5a37-d261-4f2b-8c4e-d986efe41a30', 'Quinn', 'valerie.audriell.smp.21.24@santamaria.sch.id', NULL, '$2y$10$p9Nda8ssXdESbDqYBXHePO2BMQdISKxo3sGQmLqEBQgIj4iMXb/qm', 'MEMBER', 'N', '08111353301', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-20 16:34:59', '2021-07-20 16:34:59'),
 ('a1c6f0d7-08c3-48b5-b31a-6fe4d8bed89c', 'Dzulhijah Alkayyis Rayis', 'hijahdzul8@gmail.com', NULL, '$2y$10$F/tiQ.n.kVCNneou4pLJ5euAPAZuM/GqS2XgcKM6bnocMIjWcvd6K', 'MEMBER', 'Y', '082329495850', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-05 00:05:33', '2020-12-05 00:05:33'),
 ('a1cad326-bbec-4d08-8b0c-83e896bff94f', 'Salma M', 'salma.mardhiyyah523@nurulfikri.sch.id', NULL, '$2y$10$hjnH1U60KGlyKKF9KkP9lOK/2gOWx7hXkrgJBVLpophEi6HHX52a6', 'MEMBER', 'N', '085782553050', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-02 05:55:24', '2021-08-02 05:55:24'),
 ('a1e85bc9-37ab-446c-bcde-33c37b56d395', 'BAIL MAULANA', 'bailmaulana703@gmail.com', NULL, '$2y$10$Wwakko4HtTJqRhUng57MZec6UBInxD9aDUpMSyns6pSKVZuFECIJa', 'MEMBER', 'N', '089616179455', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-17 00:08:23', '2021-07-17 00:08:23'),
@@ -8847,13 +8948,13 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `le
 ('bedc8264-658e-49f1-9ea7-a5ad3522e2df', 'callista elverda', 'elverdacallista@gmail.com', NULL, '$2y$10$2TzYRHXquwENsWFEKBu1du5m71SBQpmJCxT.ItILy/sLDxL1Tr.ue', 'MEMBER', 'N', '089607559452', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-27 05:43:27', '2021-07-27 05:43:27'),
 ('bf115166-d3e2-4dfd-ba29-c1f4612b01c4', 'enzo', 'enzojr999@gmail.com', NULL, '$2y$10$XOSeCqcA7ykHvRzF1LAVz.7lpS/YuMs9U7dl.SA.Rg/WIQ81YaIli', 'MEMBER', 'N', '087824498783', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-01 19:36:25', '2021-08-01 19:36:25'),
 ('bf3ac4db-41a6-4922-a86b-6daa2319cc86', 'Sofian', 'M035756@matahari.co.id', NULL, '$2y$10$li7JozMiY2fYn3PI1ec9a.xpZaJZ4ks2woWKSrdaWWmLiiLNJOOZe', 'MEMBER', 'Y', '081330642525', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-23 03:07:35', '2021-03-23 03:07:35'),
-('bfc47a71-7c82-46e5-b714-9c54354df244', 'Andini Aprilia Ilela', 'andiniapriliailela1304@gmail.com', NULL, '$2y$10$TdPqOQeslC37ERyT8nsihudNy85kM82qMCiF92XTTXAMTPZ/hzbMG', 'MEMBER', 'Y', '081248830837', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-14 18:19:45', '2020-12-14 18:19:45'),
+('bfc47a71-7c82-46e5-b714-9c54354df244', 'Andini Aprilia Ilela', 'andiniapriliailela1304@gmail.com', NULL, '$2y$10$TdPqOQeslC37ERyT8nsihudNy85kM82qMCiF92XTTXAMTPZ/hzbMG', 'MEMBER', 'Y', '081248830837', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-14 18:19:45', '2020-12-14 18:19:45');
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `level`, `aktif`, `kontak`, `id_sekolah`, `remember_token`, `created_at`, `updated_at`) VALUES
 ('bfc5baf5-52a0-475f-b7a8-a8b9f0fff859', 'Muhammad Ervan Yudhayana', 'ervan.yudhayana@gmail.com', NULL, '$2y$10$yQMWzUUHy9KwkTvN7nG1jebhvWR8h97VJeD2IxGCwA1..SaV3AwB.', 'MEMBER', 'Y', '089639131362', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-29 18:41:59', '2021-03-29 18:41:59'),
 ('c04124d2-d3bf-4833-8ce7-fa0339a61c1d', 'Keira Valencia', 'antonia.keira.valencia@gmail.com', NULL, '$2y$10$lOwX9s.aZ0c04ELMEIEJOeIR/byAnPBWq0qf4iazHxi4X0vVHV5PS', 'MEMBER', 'N', '0878543166', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-24 06:42:27', '2021-07-24 06:42:27'),
 ('c09d9cb8-fb9d-4e8b-befd-f3d31d11ee31', 'Rehabeam grinaldi Sulaeman', 'theamtronik@gmail.com', NULL, '$2y$10$YEnvEvYGwhmwoKNB4TDPoeN1ieKeq2AW9Z2OOcMqtKYYrAKhJcA16', 'MEMBER', 'N', '081322034649', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-01 18:32:20', '2021-08-01 18:32:20'),
 ('c0f12ebe-eef6-48f8-87ef-103d4075dc25', 'Win Metawin', 'alfinkf01@gmail.com', NULL, '$2y$10$IatOcibmqoNyRB7QbLxCrOX9ow8PwfakYTWwBN3B5PODsYP5ec6D2', 'MEMBER', 'N', '+62 858-9591-8825', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-07-09 21:57:22', '2021-07-09 21:57:22'),
-('c125b29f-0858-45c0-9dad-eef34083d21c', 'Givel', 'virgi@gmail.com', NULL, '$2y$10$WRtnOkXQwoXib2wB/EmR5uWr0IOqu1MGch7kf2PyQ0hMoC0.Wew2m', 'MEMBER', 'Y', '082236759', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-05-02 02:51:21', '2021-05-02 02:51:21');
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `level`, `aktif`, `kontak`, `id_sekolah`, `remember_token`, `created_at`, `updated_at`) VALUES
+('c125b29f-0858-45c0-9dad-eef34083d21c', 'Givel', 'virgi@gmail.com', NULL, '$2y$10$WRtnOkXQwoXib2wB/EmR5uWr0IOqu1MGch7kf2PyQ0hMoC0.Wew2m', 'MEMBER', 'Y', '082236759', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-05-02 02:51:21', '2021-05-02 02:51:21'),
 ('c1311441-437e-4c3c-8448-c36c560facae', 'Alvindo Meillinium', 'alvindo.ml@gmail.com', NULL, '$2y$10$dvgNDwz4FtLbJqf4kj8B/O388fLLX3mUG6PAuPoikMbfr9vLvCqre', 'MEMBER', 'Y', '0895326037930', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-04-18 20:49:15', '2021-04-18 20:49:15'),
 ('c13515b5-7f11-4e26-9c34-f7a1fde7ce2b', 'Felicia Hariyanto Wijaya', 'felicia.hariyanto@santa-angela.sch.id', NULL, '$2y$10$U.8BJEgXVExKaYvKblrGoOuSF0zT/rBijoMHRhUuzzfMB.RP3XjnK', 'MEMBER', 'N', '081914237626', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-25 04:37:45', '2021-07-25 04:37:45'),
 ('c136a2c0-a7be-42d9-bbf1-3a1b2549dc44', 'aulia zahra r', 'aulia.zahra@nurulfikri.sch.id', NULL, '$2y$10$htbWlKM5sAShnhBr1gPVK.uyE2.VgkP3OS3r2oKoaebIRwQgsj.Hq', 'MEMBER', 'N', '081213099838', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-09 17:17:58', '2021-08-09 17:17:58'),
@@ -8986,6 +9087,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `le
 ('d603af44-7f3e-4973-a1fc-8cbbbb9ca986', 'Amin', 'moh.amin0765@gmail.com', NULL, '$2y$10$czLyHfMOWvXwHFCsdjeUGe5TMo0kRuyXw15aOZ2DNKVh9L75gSe2y', 'MEMBER', 'N', '087775271130', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-31 06:51:13', '2021-07-31 06:51:13'),
 ('d6185e8e-7a04-4fb6-a0e4-62894cbe1888', 'Muhammad Hazmirul', 'muhammadhazmirul29@gmail.com', NULL, '$2y$10$wf6HX18htiMrjJYtQywQ3.iZVLCKI.taVYNq0PIDXr9DysTsUl31W', 'MEMBER', 'Y', '085725871746', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-13 20:32:02', '2020-12-13 20:32:02'),
 ('d67f7a26-7df5-4cc8-a7de-4d944e018d88', 'Muhammad Nafis Rizqullah', 'mnafisrizqulloh@gmail.com', NULL, '$2y$10$nULsBomRywvlrXYuM1ANzOfy18jS53Mueq1z51TO4FL838p7zBMHi', 'MEMBER', 'N', '081316393306', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-13 04:18:36', '2021-07-13 04:18:36'),
+('d69812f4-5904-441d-9059-a1ba07a7d588', 'Unit Test 2', 'unitest2@sekolah.sch.id', NULL, '$2y$10$/ju7y9Rm5IcEpspSVDZDkeSo4B7eV1fuQnFSYFLulvJ2nMMCOZoLG', 'MEMBER', 'Y', '081234567891', '076904eb-4e9d-4f0f-8b86-89fcb480b167', NULL, '2026-09-21 19:44:01', '2026-09-21 19:44:01'),
 ('d6e5d390-4356-4e6c-95bd-8057f88756cd', 'Katharine Sih Kinanti', '17181123@sdmarsudirinibekasi.sch.id', NULL, '$2y$10$szeb7z6JmynrENvfTxdj8OdKoqEjsWJjhiqo.wHkHr3aM2Zskc7ju', 'MEMBER', 'Y', '082122200312', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-02-07 19:32:40', '2021-02-07 19:32:40'),
 ('d6f2da64-53dc-43ef-bfb0-cc93a1958bb8', 'Sapriadii', 'sapriadii08@gamail.com', NULL, '$2y$10$OYhtmu8M04FCpUfNT9aVSeiREdC0jj0nxZtEoxBJxy3t8w6sTFZ5e', 'MEMBER', 'Y', '082349861422', 'ec195fca-c7e0-4eb4-8144-29ab1da2e8eb', NULL, '2022-10-10 23:01:35', '2022-10-10 23:01:35'),
 ('d70ade1e-8d35-48ef-9bd5-00f6b7fb5566', 'Earline Wang', 'earlinewangsdt@noemail.smartlibrary.com', NULL, '$2y$10$2EdNeUS1RCfyY8jtySSJT.6YrWM30GCRuahbn7Yi8DwaMMD5Pm9Qa', 'MEMBER', 'Y', '085222222178', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-01-27 00:21:45', '2021-01-27 00:21:45'),
@@ -9026,14 +9128,14 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `le
 ('dc377b6e-87b5-4ae8-9305-336cdb41caa7', 'Caroline Anatasya Putri Lohanata', 'carolineanatasya.1011@gmail.com', NULL, '$2y$10$8q3hRLgk/U75aEiNUJQN4.ahyIahXdjtyA5ncG.f7tPnhXru/V/A2', 'MEMBER', 'N', '08129589870', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-12 21:57:12', '2021-07-12 21:57:12'),
 ('dc4a15e0-63cd-4161-b80b-98136967c8a7', 'Shinta', 'nshinta907@gmail.com', NULL, '$2y$10$13zJLksn1d7QuRYn7DqeReTxNyCIeur3x1OXG5CjKRaePCut17CWq', 'MEMBER', 'N', '08982018677', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-05 22:58:31', '2021-08-05 22:58:31'),
 ('dc4ea84c-85c2-4d8e-a09b-707d82362f02', 'Belicia Renata', 'belicia_anabel@smpmydepok.sch.id', NULL, '$2y$10$WtHR6vmc7qn8gxWKA3CAdeBFsODxkusOe0fVPH.Sa54aA3CuXzGju', 'MEMBER', 'Y', '081905470634', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-02-03 18:42:22', '2021-02-03 18:42:22'),
-('dc90e48e-5df2-419c-bbc0-745cfa3db359', 'Awal', 'alkabiralhafiz1@gmail.com', NULL, '$2y$10$ix.Wq7nLmlEI1w/VYnZqEOsroIFo54elEc4j30GNUAVV1Ex.VBlta', 'MEMBER', 'Y', '081324967288', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-16 20:00:41', '2020-12-16 20:00:41'),
+('dc90e48e-5df2-419c-bbc0-745cfa3db359', 'Awal', 'alkabiralhafiz1@gmail.com', NULL, '$2y$10$ix.Wq7nLmlEI1w/VYnZqEOsroIFo54elEc4j30GNUAVV1Ex.VBlta', 'MEMBER', 'Y', '081324967288', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-16 20:00:41', '2020-12-16 20:00:41');
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `level`, `aktif`, `kontak`, `id_sekolah`, `remember_token`, `created_at`, `updated_at`) VALUES
 ('dca3b790-0d01-445c-ac5f-d9e50150f3f6', 'Anand Muntazhar Edyna', 'anandmedyna@gmail.com', NULL, '$2y$10$jUMGtWxxYdeQeSKZadO96.woxViHh/X.9psctiW8mRZDQ86NU29r2', 'MEMBER', 'N', '+6282311130811', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-16 05:17:14', '2021-07-16 05:17:14'),
 ('dcb31433-881e-4ea9-9afb-d19c5ad3fc4e', 'ulfa mahmudah', 'ulfamhmdh445@gmail.com', NULL, '$2y$10$DGOnpxZn6XLBnV/VdbJ04O/LezmGSRK6UTwwTWjxuX8ETaViWvos6', 'MEMBER', 'N', '0895375645851', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-05 18:53:31', '2021-08-05 18:53:31'),
 ('dcd6a28a-e573-4f14-8f6c-a70c39dca5e2', 'Priscilla', 'priscillavale@smpyos.com', NULL, '$2y$10$5Fkl9.ZDYDuvFKdQEV58Le1LYo0fbH.cVbieBBv.0X2wHF1BtEg7y', 'MEMBER', 'Y', '081224199328', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-05-02 23:06:27', '2021-05-02 23:06:27'),
 ('dd619756-999d-4dd8-b7c3-31ac6325d853', 'una', 'una@gmail.com', NULL, '$2y$10$GwYDIFvDA2ugMaHTYkjaW.fLYkRF42kflX/QVvOT3EQNik38ipFLG', 'MEMBER', 'Y', '082333', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-21 20:32:04', '2021-03-21 20:32:04'),
 ('dd6df93e-dd4f-474a-b72b-12346fdf02ee', 'Michelle Felisha Henukh', 'michellemichelle21henukh@gmail.com', NULL, '$2y$10$x.dnU0CzLQa.4uH4QBayseBy0K56PmodwPvHetTFPBRuABV7oFUny', 'MEMBER', 'N', '089602695029', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-14 21:13:46', '2021-07-14 21:13:46'),
-('ddc6f70c-8e57-46d1-b883-8968b80792bb', 'lucia emanuela joanne', 'm202107085@marsudirini.com', NULL, '$2y$10$9hxof2I44liRJyKf3MgqzebIlzLpbTsfcKU6TbaETHv4avlCopMHK', 'MEMBER', 'Y', '085782075607', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-02-22 17:14:16', '2021-02-22 17:14:16');
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `level`, `aktif`, `kontak`, `id_sekolah`, `remember_token`, `created_at`, `updated_at`) VALUES
+('ddc6f70c-8e57-46d1-b883-8968b80792bb', 'lucia emanuela joanne', 'm202107085@marsudirini.com', NULL, '$2y$10$9hxof2I44liRJyKf3MgqzebIlzLpbTsfcKU6TbaETHv4avlCopMHK', 'MEMBER', 'Y', '085782075607', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-02-22 17:14:16', '2021-02-22 17:14:16'),
 ('de0f1a40-0af4-4f22-b484-f881c4c6af60', 'Anand Muntazhar Edyna', 'anandmedyna@gmail.com', NULL, '$2y$10$rCEMcfciRj3mGuTHWmcIoeUXlqVu/QUWpBm50g.NlBFJjyuEP2l0i', 'MEMBER', 'N', '+6282311130811', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-16 05:19:43', '2021-07-16 05:19:43'),
 ('de429da6-bc81-4a52-9243-9f014d78742e', 'Nurpadila', 'Nur_padila@gmail.com', NULL, '$2y$10$qN/KHqVhw5HmMSsCWdcYF.sY9HDgKH3H33buruikd1.YAsUIoEBLC', 'MEMBER', 'Y', '085656634565', 'e34134a6-3cfe-46a1-9360-54ad2a94af0b', NULL, '2021-06-29 06:20:19', '2021-07-03 10:39:48'),
 ('de76dc55-7a4d-4cd3-8748-0e2528b7dd09', 'Diandra', 'diandrapratama.08@gmail.com', NULL, '$2y$10$k/Ddujlnr2Bmw71pD5m6w.GXflu70shf649Q.YoWgyOqFqw1vjf0G', 'MEMBER', 'N', '089630411218', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-14 21:41:34', '2021-07-14 21:41:34'),
@@ -9160,6 +9262,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `le
 ('f3187d5c-35f7-419e-8a1c-5de070218e2e', 'Katharine Sih Kinanti', 'KatharineSih.Kinanti@gmail.com', NULL, '$2y$10$rDObYHhFObYV7YnFdoriK.VpekqWxQ2tWe.39e3iADzOq04LHDhie', 'MEMBER', 'Y', '082122200312', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-02-07 19:30:14', '2021-02-07 19:30:14'),
 ('f328ce90-de6f-498a-820c-e62f1a6187ec', 'A.Ardi', 'andiardi503@gmail.com', NULL, '$2y$10$Qw/nHuyS6Cgf7QhmxQpJG.wutJPciETzUu1Y/wiqT.mX2TXC05jji', 'MEMBER', 'Y', '081355678115', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-14 17:43:00', '2020-12-14 17:43:00'),
 ('f32fefc9-a953-4ef7-96ea-422f2fd0a0b5', 'nacita', 'nacitamorris@gmail.com', NULL, '$2y$10$KBuM/EArPyE8JYqyUMGR2.D4uYOtxDsooRk0i.8Vjw08qJ/Eb6Su.', 'MEMBER', 'Y', '085893453387', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-05-10 19:50:41', '2021-05-10 19:50:41'),
+('f37157c3-8185-4508-9f8e-325feeb40652', 'tes3', 'tes3@gmal.com', NULL, '$2y$10$ql.kZxwMPgMEh05AIt3SKOyi/bVLrLdi4r619pLzVwGEZtHUGLGpK', 'OPERATOR', 'Y', '06576554343', '076904eb-4e9d-4f0f-8b86-89fcb480b167', NULL, '2026-09-20 20:21:34', '2026-09-20 20:21:34'),
 ('f3942759-c39a-4b0e-94c2-3b031c1e7912', 'bima', 'p2019_8046@sttheresia-jkt.sch.id', NULL, '$2y$10$RE3Uy8UqtRtckJ.0JFH/BOxmhv8B/z1MjNEIodd/K2kwA91qGCTri', 'MEMBER', 'N', '08128780414', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-20 23:41:55', '2021-07-20 23:41:55'),
 ('f39bf403-d325-421e-bd9c-adeecf99511e', 'Putri Tazkiya Al Rizky', 'putritazkiya112@gmail.com', NULL, '$2y$10$bXoaegCC.QLFOZ/nHnwMAestsPv98.B9OBdfVfRkZgMzjG4gQYRD2', 'MEMBER', 'Y', '083131635316', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-03 02:44:02', '2020-12-03 02:44:02'),
 ('f3f181fb-f72d-4d9c-adc9-948ffee41375', 'Fathinah Farhah Majidah', 'ruangfathinah@gmail.com', NULL, '$2y$10$hUeMGRhL8VAT1Eje.4pJ.u/EjJ.itnh0BcM6Lna5ShVMNIckmR8CO', 'MEMBER', 'Y', '085715661108', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-06-01 18:50:19', '2021-06-01 18:50:19'),
@@ -9204,15 +9307,15 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `le
 ('faa31698-5a5a-4ff5-bf93-0fff8f2ed8cd', 'Sarah', 'sarah.as0612@gmail.com', NULL, '$2y$10$bTBqE7rOI23Y/eRTCwDWxeM2jvjmVK7ccYLXB6z3bgKQrBuQ9R2cW', 'MEMBER', 'Y', '085288811380', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-23 17:43:10', '2021-03-23 17:43:10'),
 ('fab34c2b-2691-4ed5-904d-3f43db8a6bbf', 'ben', 'endingdewa@gmail.com', NULL, '$2y$10$.bANMJ5x8hvTYg2IeI2p3.h1Ob5XhanlpTEqDybbTM.qH2Ct2EoxW', 'MEMBER', 'N', '8987260899', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-14 18:09:40', '2021-07-14 18:09:40'),
 ('fac7119e-aae8-4617-8c67-66e42e31db01', 'Adelina ananda nurwiyanto', 'sitijuhairiah50@gmail.com', NULL, '$2y$10$rKx6e6SRL/1IS3SePr1GP.SvO7lfTGCxp5ld.ZHHJ/GYRV5U5yuDC', 'MEMBER', 'N', '081336807587', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-17 01:00:32', '2021-07-17 01:00:32'),
-('fb05d9fe-2e65-4ac9-b011-b9fb885f3bc0', 'Audrey', 'audreyjovita23@gmail.com', NULL, '$2y$10$b6jctR81LrLB7W1e40NgzeuTLp4hLUUSFUxZH7j22UWp31b5asL2W', 'MEMBER', 'N', '087822972689', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-03 18:47:34', '2021-08-03 18:47:34'),
+('fb05d9fe-2e65-4ac9-b011-b9fb885f3bc0', 'Audrey', 'audreyjovita23@gmail.com', NULL, '$2y$10$b6jctR81LrLB7W1e40NgzeuTLp4hLUUSFUxZH7j22UWp31b5asL2W', 'MEMBER', 'N', '087822972689', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-03 18:47:34', '2021-08-03 18:47:34');
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `level`, `aktif`, `kontak`, `id_sekolah`, `remember_token`, `created_at`, `updated_at`) VALUES
 ('fb16167b-8ff2-4522-9b5b-01ca68e917cd', '123123', 'admin@gmail.com', NULL, '$2y$10$bhJ3QLeIvnQ7V1YEd59KgOXKBYviruH4zSrJOxrtfmwq.XjglEESe', 'MEMBER', 'Y', '89', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-11-20 08:41:15', '2020-11-20 08:41:15'),
 ('fb23fdcc-8e0e-4e6f-8b29-0efcee9fae16', 'Haslindar', 'haslindarbelalang@gmail.com', NULL, '$2y$10$V.oL.xU7Q6lJKVyAbLvdo.6paic86.y3XPZWSKNleHv.CzTfaV2QS', 'MEMBER', 'Y', '082187711485', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-08 01:04:33', '2020-12-08 01:04:33'),
 ('fb247c45-90e0-47ca-8d7a-428c9d1f9f2f', 'Putra Cikal', '212207064.putra@smpsantamaria.sch.id', NULL, '$2y$10$.L.XcSeS4L48j9QhBLWfCOtpHITztNGTuwYbxcmrlaxlK5pBcFqVG', 'MEMBER', 'N', '088218292150', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-02 15:10:06', '2021-08-02 15:10:06'),
 ('fb45c146-18cd-43e1-a8d8-e9e4dd8deef2', 'Dian dra', 'diandrapratama.08@gmail.com', NULL, '$2y$10$ptg/DBLGEw6XLfPyWO0AgemXsw0LQ.c295ssH9pNQfMP9O51Jpeki', 'MEMBER', 'N', '082299179660', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-14 20:07:36', '2021-07-14 20:07:36'),
 ('fb542b35-660a-4fc0-80a1-0799fa9b548a', 'Ayesha Naira Parsa Ariawan', 'ayesha.naira21@nurulfikri.sch.id', NULL, '$2y$10$GPQ2YLNtqb9ivNsgz9yVbux3GeIFRcEFGW53VjbXQDWjspEOF.kwm', 'MEMBER', 'N', '081289620358', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-08-02 17:11:46', '2021-08-02 17:11:46'),
 ('fb739902-5572-4953-bf98-6e595a02fb95', 'Wulan nur fafiyah N', 'wulannurfadiyah.n@gmail.com', NULL, '$2y$10$fpk9bR.iu60IJtzKaPkC3.0LitzpryB28RgMpwglpAvJAnvnlgL1O', 'MEMBER', 'Y', '085298073277', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-12-04 19:51:39', '2020-12-04 19:51:39'),
-('fba4e9b9-a9bc-4755-ad55-5f6d03e25955', 'NESYA SAUSAN PUTRI AQILA', 'endang.ekowatie@gmail.com', NULL, '$2y$10$XeTreM5jggHSfe1EB.MCDe0C2bD41MY0hCSHjuRa6BzCyW1lZCCcC', 'MEMBER', 'N', '08119923548', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-15 02:53:19', '2021-07-15 02:53:19');
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `level`, `aktif`, `kontak`, `id_sekolah`, `remember_token`, `created_at`, `updated_at`) VALUES
+('fba4e9b9-a9bc-4755-ad55-5f6d03e25955', 'NESYA SAUSAN PUTRI AQILA', 'endang.ekowatie@gmail.com', NULL, '$2y$10$XeTreM5jggHSfe1EB.MCDe0C2bD41MY0hCSHjuRa6BzCyW1lZCCcC', 'MEMBER', 'N', '08119923548', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-15 02:53:19', '2021-07-15 02:53:19'),
 ('fbca6a75-47c8-4bb5-a823-70a819aa8ec3', 'Elsa Rosa Mariano Gemis', 'elsabaek@gmail.com', NULL, '$2y$10$kbFUDQWApfTUFslCJAozpeON3VnmCucsm2SrwVQD18EkdFwmJ2P1W', 'MEMBER', 'N', '082310788788', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-07-18 17:38:50', '2021-07-18 17:38:50'),
 ('fbcd50a0-9c37-4fe6-8040-219dd702c24d', 'brandon', 'brandon@sdsantoagustinus.sch.id', NULL, '$2y$10$54LVocfNJLmumxDrlp19q.dKrUp8NWwC80UhC9hVFyFPvfWjpzEse', 'MEMBER', 'Y', '081218133637', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2020-11-18 21:55:40', '2020-11-18 21:55:40'),
 ('fbd3c1eb-5af6-4813-9950-f96c39368236', 'emma lorenz', 'emmalorenzt02@gmail.com', NULL, '$2y$10$uDpdVAjco.T8otpKYa3orOl/Q/SsT72SoOjwCmLqLrKxWRSYZFlzG', 'MEMBER', 'N', '082115198818', '571c58d0-bbe6-446b-a4a0-c0e1acc0f06c', NULL, '2021-06-08 22:02:22', '2021-06-08 22:02:22'),
@@ -9241,9 +9344,37 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `le
 ('ffd7e76d-f780-44e5-8146-585069f25150', 'Devi e', 'devie0329@gmail.com', NULL, '$2y$10$Nx2mRK0Laf9HbWJlZzsIV.A0SaWsxoPZfW3py9T26JLhFlpTd9kNe', 'MEMBER', 'Y', '089522675844', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-09 13:39:58', '2021-03-09 13:39:58'),
 ('fff8ee55-2750-41ce-8dcc-5c858431b6f3', 'Nurani ayu', 'nuraniayulistyowati@gmail.com', NULL, '$2y$10$OlAnLmxa60Pm3Fak3DYhpuMClFhpr5NAtlo/AoU0E5GKUJl53P/C6', 'MEMBER', 'Y', '083182500511', '4f0d3866-ee79-45e2-a30a-e77283d79ba8', NULL, '2021-03-23 18:45:11', '2021-03-23 18:45:11');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `videos`
+--
+
+CREATE TABLE `videos` (
+  `id_video` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `judul` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kategori_video` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `youtube_url` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `youtube_id` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deskripsi` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id_user` varchar(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id_sekolah` varchar(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `aktif` enum('Y','N') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Y',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `buku_fisik`
+--
+ALTER TABLE `buku_fisik`
+  ADD PRIMARY KEY (`id_buku_fisik`),
+  ADD KEY `id_kategori` (`id_kategori`),
+  ADD KEY `id_sekolah_idx` (`id_sekolah`);
 
 --
 -- Indexes for table `ebook`
@@ -9321,6 +9452,25 @@ ALTER TABLE `oauth_refresh_tokens`
   ADD KEY `oauth_refresh_tokens_access_token_id_index` (`access_token_id`);
 
 --
+-- Indexes for table `peminjaman`
+--
+ALTER TABLE `peminjaman`
+  ADD PRIMARY KEY (`id_peminjaman`),
+  ADD KEY `id_buku_fisik` (`id_buku_fisik`),
+  ADD KEY `id_user_peminjam` (`id_user_peminjam`),
+  ADD KEY `id_operator` (`id_operator`),
+  ADD KEY `status` (`status`),
+  ADD KEY `tanggal_rencana_kembali` (`tanggal_rencana_kembali`);
+
+--
+-- Indexes for table `pengembalian`
+--
+ALTER TABLE `pengembalian`
+  ADD PRIMARY KEY (`id_pengembalian`),
+  ADD KEY `id_peminjaman` (`id_peminjaman`),
+  ADD KEY `id_operator` (`id_operator`);
+
+--
 -- Indexes for table `sekolah`
 --
 ALTER TABLE `sekolah`
@@ -9340,6 +9490,16 @@ ALTER TABLE `users`
   ADD KEY `id_sekolah` (`id_sekolah`);
 
 --
+-- Indexes for table `videos`
+--
+ALTER TABLE `videos`
+  ADD PRIMARY KEY (`id_video`),
+  ADD KEY `idx_videos_kategori` (`kategori_video`),
+  ADD KEY `idx_videos_aktif` (`aktif`),
+  ADD KEY `idx_videos_sekolah` (`id_sekolah`),
+  ADD KEY `idx_videos_created` (`created_at`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -9347,7 +9507,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

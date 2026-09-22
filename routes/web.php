@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 /*
 |--------------------------------------------------------------------------
@@ -111,12 +111,29 @@ Route::group(['middleware'=>['auth:user','ceklevel:SUPERUSER,ADMIN,OPERATOR']], 
 	Route::get('/member/aktivasi', 'Admin\devCont@memberaktivasi')->name('member.aktivasi');
 
 	// ============================================================
-	// IMPORT MEMBER (Operator & Admin) — bulk via Excel
+	// IMPORT MEMBER (Operator & Admin) â€” bulk via Excel
 	// ============================================================
 	Route::get('/op/member/import',          'Admin\MemberImportCont@index')->name('op.member.import');
 	Route::get('/op/member/import/template', 'Admin\MemberImportCont@template')->name('op.member.import.template');
 	Route::post('/op/member/import',         'Admin\MemberImportCont@import')->name('op.member.import.post');
-	
+
+	// ============================================================
+	// VIDEO TUTORIAL (Operator/Admin) â€” link YouTube, ditampilkan di portal publik
+	// ============================================================
+	Route::get('/op/video',                    'Admin\VideoCont@index')->name('op.video');
+	Route::get('/op/video/create',             'Admin\VideoCont@create')->name('op.video.insert');
+	Route::post('/op/video/post',              'Admin\VideoCont@store')->name('op.video.post');
+	Route::get('/op/video/edit/{id}',          'Admin\VideoCont@edit')->name('op.video.edit');
+	Route::post('/op/video/update',            'Admin\VideoCont@update')->name('op.video.update');
+	Route::get('/op/video/delete/{id}',        'Admin\VideoCont@destroy')->name('op.video.delete');
+	Route::get('/op/video/toggle-aktif/{id}',  'Admin\VideoCont@toggleAktif')->name('op.video.toggleAktif');
+
 	Route::get('/sekolah/delete/{id}','Admin\SekolahController@deleteSekolah');
-	
+
 });
+
+// ============================================================
+	
+	
+Route::get('/video',         'Admin\VideoCont@memberIndex')->name('member.video');
+Route::get('/video/{id}',    'Admin\VideoCont@memberShow')->name('member.video.show');
