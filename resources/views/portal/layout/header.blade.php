@@ -21,6 +21,7 @@
                             @endforeach
                         </ul>
                     </li>
+                    <li><a href="{{route('member.video')}}">Video Tutorial</a></li>
                     <li><a href="#mitra">Mitra</a></li>
                     <li><a href="">Kontak</a></li>
                     <li><a href="{{route('register')}}">Register</a></li>
