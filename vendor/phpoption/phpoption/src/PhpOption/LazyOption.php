@@ -18,8 +18,10 @@
 
 namespace PhpOption;
 
+use Traversable;
+
 /**
- * @template T
+ * @template-covariant T
  *
  * @extends Option<T>
  */
@@ -41,7 +43,7 @@ final class LazyOption extends Option
      *
      * @return LazyOption<S>
      */
-    public static function create($callback, array $arguments = [])
+    public static function create($callback, array $arguments = []): self
     {
         return new self($callback, $arguments);
     }
@@ -49,6 +51,8 @@ final class LazyOption extends Option
     /**
      * @param callable(mixed...):(Option<T>) $callback
      * @param array<int, mixed>              $arguments
+     *
+     * @throws \InvalidArgumentException If the callback is not callable.
      */
     public function __construct($callback, array $arguments = [])
     {
@@ -60,12 +64,12 @@ final class LazyOption extends Option
         $this->arguments = $arguments;
     }
 
-    public function isDefined()
+    public function isDefined(): bool
     {
         return $this->option()->isDefined();
     }
 
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return $this->option()->isEmpty();
     }
@@ -135,7 +139,10 @@ final class LazyOption extends Option
         return $this->option()->reject($value);
     }
 
-    public function getIterator()
+    /**
+     * @return Traversable<T>
+     */
+    public function getIterator(): Traversable
     {
         return $this->option()->getIterator();
     }
@@ -153,7 +160,7 @@ final class LazyOption extends Option
     /**
      * @return Option<T>
      */
-    private function option()
+    private function option(): Option
     {
         if (null === $this->option) {
             /** @var mixed */

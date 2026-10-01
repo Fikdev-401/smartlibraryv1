@@ -48,15 +48,28 @@ class SchoolScope
      * Apply id_sekolah filter to an Eloquent query or a DB query builder.
      * Returns the same builder (chainable).
      *
+     * - SUPERUSER / ADMIN -> tanpa filter (lihat semua sekolah).
+     * - OPERATOR          -> difilter ke id_sekolah-nya sendiri.
+     * - OPERATOR tanpa id_sekolah -> TIDAK melihat apa pun (deny-by-default),
+     *   supaya tidak bocor melihat data semua sekolah.
+     *
      * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder $q
      * @param string $column  column name to filter by (default 'id_sekolah')
      */
     public static function apply($q, string $column = 'id_sekolah')
     {
+        if (self::isGlobalViewer()) {
+            return $q;
+        }
+
         $scope = self::currentIdSekolah();
-        if ($scope !== null) {
+        if ($scope === null) {
+            // Tidak login ATAU operator tanpa id_sekolah -> kosong.
+            $q->whereRaw('1 = 0');
+        } else {
             $q->where($column, $scope);
         }
+
         return $q;
     }
 

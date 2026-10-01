@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 /*
 |--------------------------------------------------------------------------
@@ -73,7 +73,8 @@ Route::group(['middleware'=>['auth:user','ceklevel:SUPERUSER,ADMIN,OPERATOR']], 
 	Route::post('/gen/pengguna/post', 'Admin\devCont@postuser')->name('gen.pengguna.post');
 	Route::get('/gen/pengguna/edit/{id}', 'Admin\devCont@edituser')->name('gen.pengguna.edit');
 	Route::post('/gen/pengguna/update', 'Admin\devCont@updateuser')->name('gen.pengguna.update');
-	Route::get('/gen/pengguna/delete/{id}', 'Admin\devCont@deluser')->name('gen.pengguna.delete');
+	Route::post('/gen/pengguna/delete/{id}', 'Admin\devCont@deleteMember')->name('gen.pengguna.delete');
+	Route::post('/gen/pengguna/bulk-delete', 'Admin\devCont@bulkDeleteMembers')->name('gen.pengguna.bulkDelete');
 	Route::get('/gen/pengguna/toggle-aktif/{id}', 'Admin\devCont@toggleAktif')->name('gen.pengguna.toggleAktif');
 	
 	Route::get('/gen/user/upload', 'Admin\UserUploadController@index')->name('gen.user.upload');

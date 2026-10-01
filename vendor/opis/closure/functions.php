@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright (c) 2018-2019 Zindex Software
+ * Copyright (c) 2018-2021 Zindex Software
  *
  * Licensed under the MIT License
  * =========================================================================== */
@@ -29,7 +29,7 @@ function serialize($data)
  * @param array|null $options
  * @return mixed
  */
-function unserialize($data, array $options = null)
+function unserialize($data, $options = null)
 {
     SerializableClosure::enterContext();
     $data = ($options === null || \PHP_MAJOR_VERSION < 7)

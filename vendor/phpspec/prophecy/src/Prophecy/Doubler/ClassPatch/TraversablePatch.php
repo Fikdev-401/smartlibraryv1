@@ -13,6 +13,8 @@ namespace Prophecy\Doubler\ClassPatch;
 
 use Prophecy\Doubler\Generator\Node\ClassNode;
 use Prophecy\Doubler\Generator\Node\MethodNode;
+use Prophecy\Doubler\Generator\Node\ReturnTypeNode;
+use Prophecy\Doubler\Generator\Node\Type\BuiltinType;
 
 /**
  * Traversable interface patch.
@@ -64,11 +66,25 @@ class TraversablePatch implements ClassPatchInterface
     {
         $node->addInterface('Iterator');
 
-        $node->addMethod(new MethodNode('current'));
-        $node->addMethod(new MethodNode('key'));
-        $node->addMethod(new MethodNode('next'));
-        $node->addMethod(new MethodNode('rewind'));
-        $node->addMethod(new MethodNode('valid'));
+        $currentMethod = new MethodNode('current');
+        $currentMethod->setReturnTypeNode(new ReturnTypeNode(new BuiltinType('mixed')));
+        $node->addMethod($currentMethod);
+
+        $keyMethod = new MethodNode('key');
+        $keyMethod->setReturnTypeNode(new ReturnTypeNode(new BuiltinType('mixed')));
+        $node->addMethod($keyMethod);
+
+        $nextMethod = new MethodNode('next');
+        $nextMethod->setReturnTypeNode(new ReturnTypeNode(new BuiltinType('void')));
+        $node->addMethod($nextMethod);
+
+        $rewindMethod = new MethodNode('rewind');
+        $rewindMethod->setReturnTypeNode(new ReturnTypeNode(new BuiltinType('void')));
+        $node->addMethod($rewindMethod);
+
+        $validMethod = new MethodNode('valid');
+        $validMethod->setReturnTypeNode(new ReturnTypeNode(new BuiltinType('bool')));
+        $node->addMethod($validMethod);
     }
 
     /**

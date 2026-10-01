@@ -21,7 +21,7 @@ namespace PhpOption;
 use ArrayIterator;
 
 /**
- * @template T
+ * @template-covariant T
  *
  * @extends Option<T>
  */
@@ -45,17 +45,17 @@ final class Some extends Option
      *
      * @return Some<U>
      */
-    public static function create($value)
+    public static function create($value): self
     {
         return new self($value);
     }
 
-    public function isDefined()
+    public function isDefined(): bool
     {
         return true;
     }
 
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return false;
     }
@@ -65,11 +65,21 @@ final class Some extends Option
         return $this->value;
     }
 
+    /**
+     * @param mixed $default
+     *
+     * @return T
+     */
     public function getOrElse($default)
     {
         return $this->value;
     }
 
+    /**
+     * @param callable():mixed $callable
+     *
+     * @return T
+     */
     public function getOrCall($callable)
     {
         return $this->value;
@@ -149,16 +159,37 @@ final class Some extends Option
         return $this;
     }
 
-    public function getIterator()
+    /**
+     * @return ArrayIterator<int, T>
+     */
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator([$this->value]);
     }
 
+    /**
+     * @template S
+     * @template R
+     *
+     * @param S                $initialValue
+     * @param callable(S, T):R $callable
+     *
+     * @return R
+     */
     public function foldLeft($initialValue, $callable)
     {
         return $callable($initialValue, $this->value);
     }
 
+    /**
+     * @template S
+     * @template R
+     *
+     * @param S                $initialValue
+     * @param callable(T, S):R $callable
+     *
+     * @return R
+     */
     public function foldRight($initialValue, $callable)
     {
         return $callable($this->value, $initialValue);

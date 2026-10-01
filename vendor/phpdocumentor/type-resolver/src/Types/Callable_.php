@@ -15,16 +15,66 @@ namespace phpDocumentor\Reflection\Types;
 
 use phpDocumentor\Reflection\Type;
 
+use function implode;
+
 /**
  * Value Object representing a Callable type.
+ *
+ * @psalm-immutable
  */
 final class Callable_ implements Type
 {
+    /** @var string */
+    private $identifier;
+    /** @var Type|null */
+    private $returnType;
+    /** @var CallableParameter[] */
+    private $parameters;
+
+    /**
+     * @param CallableParameter[] $parameters
+     */
+    public function __construct(
+        string $identifier = 'callable',
+        array $parameters = [],
+        ?Type $returnType = null
+    ) {
+        $this->identifier = $identifier;
+        $this->parameters = $parameters;
+        $this->returnType = $returnType;
+    }
+
+    public function getIdentifier(): string
+    {
+        return $this->identifier;
+    }
+
+    /** @return CallableParameter[] */
+    public function getParameters(): array
+    {
+        return $this->parameters;
+    }
+
+    public function getReturnType(): ?Type
+    {
+        return $this->returnType;
+    }
+
     /**
      * Returns a rendered output of the Type as it would be used in a DocBlock.
      */
-    public function __toString() : string
+    public function __toString(): string
     {
-        return 'callable';
+        if (!$this->parameters && $this->returnType === null) {
+            return $this->identifier;
+        }
+
+        if ($this->returnType instanceof self) {
+            $returnType = '(' . (string) $this->returnType . ')';
+        } else {
+            $returnType = (string) $this->returnType;
+        }
+
+        return $this->identifier . '(' . implode(', ', $this->parameters) . '): ' . $returnType;
     }
 }

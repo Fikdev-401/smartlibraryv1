@@ -1,4 +1,4 @@
-﻿@extends('admin.layout.template')
+@extends('admin.layout.template')
 @section('content')
 <div class="pcoded-content">
     <div class="page-header">

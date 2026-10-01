@@ -8,53 +8,43 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @copyright 2010-2015 Mike van Riel<mike@phpdoc.org>
- * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link      http://phpdoc.org
  */
 
 namespace phpDocumentor\Reflection\DocBlock\Tags;
 
+use phpDocumentor\Reflection\DocBlock\Tag;
+use phpDocumentor\Reflection\Exception\CannotCreateTag;
 use phpDocumentor\Reflection\Type;
 
 abstract class TagWithType extends BaseTag
 {
-    /** @var Type */
-    protected $type;
+    /** @var ?Type */
+    protected ?Type $type = null;
 
     /**
      * Returns the type section of the variable.
-     *
-     * @return Type
      */
-    public function getType()
+    public function getType(): ?Type
     {
         return $this->type;
     }
 
-    protected static function extractTypeFromBody(string $body) : array
+    final public static function create(string $body): Tag
     {
-        $type = '';
-        $nestingLevel = 0;
-        for ($i = 0; $i < strlen($body); $i++) {
-            $character = $body[$i];
+        throw new CannotCreateTag('Typed tag cannot be created');
+    }
 
-            if (trim($character) === '' && $nestingLevel === 0) {
-                break;
-            }
-
-            $type .= $character;
-            if (in_array($character, ['<', '(', '[', '{'])) {
-                $nestingLevel++;
-            }
-
-            if (in_array($character, ['>', ')', ']', '}'])) {
-                $nestingLevel--;
-            }
+    public function __toString(): string
+    {
+        if ($this->description) {
+            $description = $this->description->render();
+        } else {
+            $description = '';
         }
 
-        $description = trim(substr($body, strlen($type)));
+        $type = (string) $this->type;
 
-        return [$type, $description];
+        return $type . ($description !== '' ? ($type !== '' ? ' ' : '') . $description : '');
     }
 }

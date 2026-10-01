@@ -22,6 +22,16 @@ class User extends Authenticatable
     protected $table="users";
     protected $primaryKey="id";
     protected $keyType="string";
+
+    /**
+     * PK `users.id` adalah UUID (varchar), BUKAN auto-increment.
+     * Tanpa ini, Laravel menganggap PK auto-increment dan setelah insert
+     * menimpa `$model->id` dengan lastInsertId() = "0" (baris di DB tetap
+     * benar, tapi `$user->id` di memori jadi salah).
+     *
+     * @var bool
+     */
+    public $incrementing = false;
     protected $fillable = [
         'name', 'email', 'password', 'level','id_sekolah', 'aktif', 'kontak', 
     ];
